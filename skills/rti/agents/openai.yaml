@@ -1,0 +1,4 @@
+interface:
+  display_name: "임대소득 대비 이자(RTI)"
+  short_description: "임대수입이 대출이자의 몇 배인지와 이자 부담으로 역산한 대출액을 계산합니다."
+  default_prompt: "$rti 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "경매 배당"
+  short_description: "경매 낙찰대금을 정해진 순서로 나누었을 때 각 채권자가 받을 돈을 계산합니다."
+  default_prompt: "$baedang 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

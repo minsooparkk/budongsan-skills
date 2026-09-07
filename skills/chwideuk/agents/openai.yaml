@@ -1,0 +1,4 @@
+interface:
+  display_name: "취득세"
+  short_description: "부동산을 살 때·받을 때 내는 취득세와 함께 붙는 세금을 계산합니다."
+  default_prompt: "$chwideuk 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

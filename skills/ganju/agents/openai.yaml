@@ -1,0 +1,4 @@
+interface:
+  display_name: "간주임대료"
+  short_description: "보증금의 일부를 임대수입으로 보는 금액을 계산해 주택임대소득 계산에 연결합니다."
+  default_prompt: "$ganju 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "중개보수(복비)"
+  short_description: "매매나 임대차 거래에서 한쪽 당사자가 부담할 중개보수의 상한과 부가가치세를 계산합니다."
+  default_prompt: "$junggae 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

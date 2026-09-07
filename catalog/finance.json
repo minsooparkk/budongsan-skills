@@ -1,0 +1,2331 @@
+[
+  {
+    "id": "dsr",
+    "title": "빚 갚을 능력 비율(DSR)",
+    "description": "연소득에서 대출을 갚는 돈이 차지하는 비율과 입력한 한도 안의 대출액을 계산합니다.",
+    "module": "finance",
+    "export": "calcDsr",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "income",
+        "type": "number",
+        "question": "증빙할 수 있는 1년 소득은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "existing",
+        "type": "number",
+        "question": "기존 대출의 DSR 계산용 연간 원금·이자 합계는 얼마인가요? 기존 대출이 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "amount",
+        "type": "number",
+        "question": "새로 빌리려는 대출 원금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "새 대출의 약정 연 금리는 얼마인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "years",
+        "type": "number",
+        "question": "대출 만기는 몇 년인가요? 개월로 약정했다면 개월 수를 12로 나눕니다.",
+        "required": true,
+        "unit": "년",
+        "min": 0.08333333333333333,
+        "max": 100
+      },
+      {
+        "key": "repay",
+        "type": "enum",
+        "question": "대출 원금을 어떤 방식으로 갚나요?",
+        "required": true,
+        "options": [
+          {
+            "value": "annuity",
+            "label": "매달 원금과 이자의 합계를 같게 갚기(원리금균등)"
+          },
+          {
+            "value": "principal",
+            "label": "매달 원금을 같게 갚고 남은 원금의 이자 내기(원금균등)"
+          },
+          {
+            "value": "bullet",
+            "label": "매달 이자를 내다가 마지막에 원금 전부 갚기(만기일시)"
+          }
+        ]
+      },
+      {
+        "key": "stress",
+        "type": "number",
+        "question": "은행이 한도 계산에만 더하는 스트레스 가산금리는 몇 %p인가요? 미적용을 확인했다면 0입니다.",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "limit",
+        "type": "number",
+        "question": "은행이 적용하는 DSR 한도는 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      }
+    ],
+    "example": {
+      "income": 70000000,
+      "existing": 0,
+      "amount": 300000000,
+      "rate": 0.04,
+      "years": 30,
+      "repay": "annuity",
+      "stress": 0.015,
+      "limit": 0.4
+    },
+    "notes": [
+      "계산 결과는 입력한 금리·한도를 적용한 비교값입니다. 금융기관의 실제 대출 승인이나 적용 규제를 확정하지 않습니다.",
+      "대출 기간은 정수 개월이어야 합니다. 금리·상환 조건이 바뀌면 다시 계산합니다.",
+      "기존 대출의 환산 방법은 상품마다 다릅니다. 통장에서 실제 빠진 금액을 DSR 환산액이라고 단정하지 않습니다.",
+      "원금균등은 초기 원금의 이자를, 만기일시는 원금을 만기로 나눈 금액과 이자를 사용한 근사 계산입니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "dti",
+    "title": "소득 대비 빚 비율(DTI)",
+    "description": "주택담보대출 상환액과 다른 대출의 이자가 연소득에서 차지하는 비율을 계산합니다.",
+    "module": "finance",
+    "export": "calcDti",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "income",
+        "type": "number",
+        "question": "증빙할 수 있는 1년 소득은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "amount",
+        "type": "number",
+        "question": "새 주택담보대출 원금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "새 주택담보대출의 약정 연 금리는 얼마인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "years",
+        "type": "number",
+        "question": "대출 만기는 몇 년인가요? 개월로 약정했다면 개월 수를 12로 나눕니다.",
+        "required": true,
+        "unit": "년",
+        "min": 0.08333333333333333,
+        "max": 100
+      },
+      {
+        "key": "existingMortgage",
+        "type": "number",
+        "question": "기존 주택담보대출의 1년 원금·이자 상환액은 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "otherInterest",
+        "type": "number",
+        "question": "그 밖의 대출에서 1년 동안 내는 이자는 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "limit",
+        "type": "number",
+        "question": "은행이 적용하는 DTI 한도는 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      }
+    ],
+    "example": {
+      "income": 70000000,
+      "amount": 300000000,
+      "rate": 0.04,
+      "years": 30,
+      "existingMortgage": 0,
+      "otherInterest": 0,
+      "limit": 0.4
+    },
+    "notes": [
+      "계산 결과는 입력한 금리·한도를 적용한 비교값입니다. 금융기관의 실제 대출 승인이나 적용 규제를 확정하지 않습니다.",
+      "대출 기간은 정수 개월이어야 합니다. 금리·상환 조건이 바뀌면 다시 계산합니다.",
+      "신규 주택담보대출은 원리금균등 방식으로 계산합니다. 다른 상환 방식이나 은행의 세부 환산 규칙은 반영하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "rti",
+    "title": "임대소득 대비 이자(RTI)",
+    "description": "임대수입이 대출이자의 몇 배인지와 이자 부담으로 역산한 대출액을 계산합니다.",
+    "module": "finance",
+    "export": "calcRti",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "rent",
+        "type": "number",
+        "question": "은행이 인정하는 1년 임대소득은 얼마인가요? 월세와 은행이 인정하는 보증금 환산 수입을 합칩니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "amount",
+        "type": "number",
+        "question": "새 대출 원금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "새 대출의 약정 연 금리는 얼마인가요? 0보다 큰 금리가 필요합니다.",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "existingInterest",
+        "type": "number",
+        "question": "기존 담보대출에서 1년 동안 내는 이자는 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "isHousing",
+        "type": "boolean",
+        "question": "주택을 임대하는 대출인가요? 상가·사무실 임대라면 아니요입니다.",
+        "required": true
+      }
+    ],
+    "example": {
+      "rent": 36000000,
+      "amount": 400000000,
+      "rate": 0.05,
+      "existingInterest": 0,
+      "isHousing": true
+    },
+    "notes": [
+      "결과는 주택 1.25배·그 밖의 부동산 1.5배를 적용한 시나리오입니다. 현재 은행의 기준과 인정 임대소득을 확인해야 합니다.",
+      "대출 승인은 추가 심사가 필요합니다. RTI 계산을 통과했다는 이유만으로 실제 대출이 가능하다고 답하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "ltv",
+    "title": "집값 대비 대출(LTV)",
+    "description": "집값에서 기존 채권과 방공제를 뺀 담보 기준 대출액을 계산합니다.",
+    "module": "finance",
+    "export": "calcLtv",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "price",
+        "type": "number",
+        "question": "은행이 담보가치로 인정하는 집값은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "ltv",
+        "type": "number",
+        "question": "은행이 이 대출에 적용하는 집값 대비 대출 비율(LTV)은 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "senior",
+        "type": "number",
+        "question": "이 대출보다 먼저 보호되는 기존 대출·임차보증금 합계는 얼마인가요? 없음을 확인했다면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "region",
+        "type": "enum",
+        "question": "방공제를 적용할 부동산은 어느 지역에 있나요?",
+        "required": true,
+        "options": [
+          {
+            "value": "seoul",
+            "label": "서울"
+          },
+          {
+            "value": "metro-over",
+            "label": "과밀억제권역·세종·용인·화성·김포"
+          },
+          {
+            "value": "metro-city",
+            "label": "광역시·안산·경기 광주·파주·이천·평택"
+          },
+          {
+            "value": "other",
+            "label": "그 밖의 지역"
+          }
+        ]
+      },
+      {
+        "key": "rooms",
+        "type": "number",
+        "question": "은행이 방공제에 적용하는 방 수는 몇 실인가요? 집의 실제 방 개수와 다를 수 있습니다.",
+        "required": true,
+        "unit": "실",
+        "min": 1,
+        "max": 10000,
+        "integer": true
+      },
+      {
+        "key": "mci",
+        "type": "boolean",
+        "question": "방공제를 면제하는 MCI 보험이나 MCG 보증에 가입하나요?",
+        "required": false,
+        "default": false,
+        "assumption": "MCI·MCG에 가입하지 않는 것으로 보고 방공제를 차감했습니다."
+      },
+      {
+        "key": "cap",
+        "type": "number",
+        "question": "은행이 적용하는 대출 금액의 별도 상한은 얼마인가요? 상한이 없음을 확인했다면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      }
+    ],
+    "example": {
+      "price": 800000000,
+      "ltv": 0.7,
+      "senior": 0,
+      "region": "seoul",
+      "rooms": 1,
+      "cap": 600000000
+    },
+    "notes": [
+      "결과는 담보 기준 비교값입니다. 소득 심사와 DSR, 금융기관의 상품 조건에 따라 실제 한도는 줄어듭니다.",
+      "방공제는 소액임차인 보호를 위해 은행이 담보가치에서 빼는 금액입니다. 주소와 담보 설정 시점에 맞는 지역 분류·공제액을 확인합니다.",
+      "별도 상한의 0원은 상한이 없다는 뜻입니다. 상한을 모른다는 뜻으로 입력하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "daechul-hando",
+    "title": "주택담보대출 가능액",
+    "description": "집값으로 정한 한도와 소득으로 정한 한도를 비교해 더 작은 대출액을 계산합니다.",
+    "module": "finance",
+    "export": "calcLoanLimit",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "price",
+        "type": "number",
+        "question": "은행이 담보가치로 인정하는 집값은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "ltv",
+        "type": "number",
+        "question": "은행이 이 대출에 적용하는 집값 대비 대출 비율(LTV)은 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "senior",
+        "type": "number",
+        "question": "이 대출보다 먼저 보호되는 기존 대출·임차보증금 합계는 얼마인가요? 없음을 확인했다면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "region",
+        "type": "enum",
+        "question": "방공제를 적용할 부동산은 어느 지역에 있나요?",
+        "required": true,
+        "options": [
+          {
+            "value": "seoul",
+            "label": "서울"
+          },
+          {
+            "value": "metro-over",
+            "label": "과밀억제권역·세종·용인·화성·김포"
+          },
+          {
+            "value": "metro-city",
+            "label": "광역시·안산·경기 광주·파주·이천·평택"
+          },
+          {
+            "value": "other",
+            "label": "그 밖의 지역"
+          }
+        ]
+      },
+      {
+        "key": "rooms",
+        "type": "number",
+        "question": "은행이 방공제에 적용하는 방 수는 몇 실인가요? 집의 실제 방 개수와 다를 수 있습니다.",
+        "required": true,
+        "unit": "실",
+        "min": 1,
+        "max": 10000,
+        "integer": true
+      },
+      {
+        "key": "mci",
+        "type": "boolean",
+        "question": "방공제를 면제하는 MCI 보험이나 MCG 보증에 가입하나요?",
+        "required": false,
+        "default": false,
+        "assumption": "MCI·MCG에 가입하지 않는 것으로 보고 방공제를 차감했습니다."
+      },
+      {
+        "key": "cap",
+        "type": "number",
+        "question": "은행이 적용하는 대출 금액의 별도 상한은 얼마인가요? 상한이 없음을 확인했다면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "income",
+        "type": "number",
+        "question": "증빙할 수 있는 1년 소득은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "existing",
+        "type": "number",
+        "question": "기존 대출의 DSR 계산용 연간 원금·이자 합계는 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "새 대출의 약정 연 금리는 얼마인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "years",
+        "type": "number",
+        "question": "대출 만기는 몇 년인가요? 개월로 약정했다면 개월 수를 12로 나눕니다.",
+        "required": true,
+        "unit": "년",
+        "min": 0.08333333333333333,
+        "max": 100
+      },
+      {
+        "key": "stress",
+        "type": "number",
+        "question": "은행이 한도 계산에 더하는 스트레스 가산금리는 몇 %p인가요? 미적용을 확인했다면 0입니다.",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "dsrLimit",
+        "type": "number",
+        "question": "은행이 적용하는 DSR 한도는 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      }
+    ],
+    "example": {
+      "price": 800000000,
+      "ltv": 0.7,
+      "senior": 0,
+      "region": "seoul",
+      "rooms": 1,
+      "cap": 600000000,
+      "income": 80000000,
+      "existing": 0,
+      "rate": 0.04,
+      "years": 30,
+      "stress": 0.015,
+      "dsrLimit": 0.4
+    },
+    "notes": [
+      "계산 결과는 입력한 금리·한도를 적용한 비교값입니다. 금융기관의 실제 대출 승인이나 적용 규제를 확정하지 않습니다.",
+      "대출 기간은 정수 개월이어야 합니다. 금리·상환 조건이 바뀌면 다시 계산합니다.",
+      "소득 기준 한도는 원리금균등상환을 전제로 합니다. 은행의 신용심사나 개별 대출 규제는 별도로 확인합니다.",
+      "방공제에 쓰는 지역과 금액은 주소·담보 설정 시점에 따라 확인합니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "chujeong-sodeuk",
+    "title": "추정·인정소득",
+    "description": "보험료나 카드 사용액으로 소득을 역산하고 입력한 인정 비율과 상한을 적용합니다.",
+    "module": "finance",
+    "export": "calcImputedIncome",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "method",
+        "type": "enum",
+        "question": "어떤 자료로 소득을 추정하나요?",
+        "required": true,
+        "options": [
+          {
+            "value": "health",
+            "label": "직장 건강보험료의 본인 부담액"
+          },
+          {
+            "value": "pension",
+            "label": "직장 국민연금의 본인 부담액"
+          },
+          {
+            "value": "card",
+            "label": "1년 신용카드 사용액"
+          }
+        ]
+      },
+      {
+        "key": "cardSpend",
+        "type": "number",
+        "question": "1년 동안 사용한 신용카드 금액은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "card"
+        }
+      },
+      {
+        "key": "healthMonthly",
+        "type": "number",
+        "question": "한 달 건강보험료의 본인 부담액은 얼마인가요? 장기요양보험료는 제외합니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "health"
+        }
+      },
+      {
+        "key": "pensionMonthly",
+        "type": "number",
+        "question": "한 달 국민연금의 본인 부담액은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "pension"
+        }
+      },
+      {
+        "key": "healthRate",
+        "type": "number",
+        "question": "해당 연도의 직장 건강보험료 중 본인 부담 요율은 몇 %인가요? 0보다 큰 값이 필요합니다.",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "health"
+        }
+      },
+      {
+        "key": "pensionRate",
+        "type": "number",
+        "question": "해당 연도의 직장 국민연금 중 본인 부담 요율은 몇 %인가요? 0보다 큰 값이 필요합니다.",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "pension"
+        }
+      },
+      {
+        "key": "recognition",
+        "type": "number",
+        "question": "은행이 역산 소득에서 인정하는 비율은 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "capAmount",
+        "type": "number",
+        "question": "은행이 추정소득으로 인정하는 연 소득의 상한은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      }
+    ],
+    "example": {
+      "method": "health",
+      "healthMonthly": 150000,
+      "healthRate": 0.03595,
+      "recognition": 0.95,
+      "capAmount": 50000000
+    },
+    "notes": [
+      "선택한 방식의 자료만 질문합니다. 건강보험료·국민연금·카드 사용액 중 쓰지 않는 값은 계산에서 제외합니다.",
+      "보험료 방식은 직장가입자의 본인 부담액을 역산합니다. 지역가입자 보험료나 사업주 부담액에 이 산식을 그대로 적용하지 않습니다.",
+      "카드 방식은 사용액에 입력한 인정 비율을 곱하는 단순 시나리오입니다. 은행의 실제 카드 환산 공식이나 승인 소득을 재현한다고 답하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "jangrae-sodeuk",
+    "title": "장래소득",
+    "description": "현재 소득에 나이별 증가율을 적용해 대출 심사용 소득의 변화를 계산합니다.",
+    "module": "finance",
+    "export": "calcFutureIncome",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "income",
+        "type": "number",
+        "question": "현재 1년 소득은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "age",
+        "type": "number",
+        "question": "신청자의 만 나이는 몇 세인가요?",
+        "required": true,
+        "unit": "세",
+        "min": 0,
+        "max": 120,
+        "integer": true
+      },
+      {
+        "key": "years",
+        "type": "number",
+        "question": "대출 만기는 몇 년인가요? 개월로 약정했다면 개월 수를 12로 나눕니다.",
+        "required": true,
+        "unit": "년",
+        "min": 0.08333333333333333,
+        "max": 100
+      },
+      {
+        "key": "rate20",
+        "type": "number",
+        "question": "은행이 만 20~24세에게 적용하는 소득 증가율은 몇 %인가요?",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "age",
+          "values": [
+            20,
+            21,
+            22,
+            23,
+            24
+          ]
+        }
+      },
+      {
+        "key": "rate25",
+        "type": "number",
+        "question": "은행이 만 25~29세에게 적용하는 소득 증가율은 몇 %인가요?",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "age",
+          "values": [
+            25,
+            26,
+            27,
+            28,
+            29
+          ]
+        }
+      },
+      {
+        "key": "rate30",
+        "type": "number",
+        "question": "은행이 만 30~34세에게 적용하는 소득 증가율은 몇 %인가요?",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "age",
+          "values": [
+            30,
+            31,
+            32,
+            33,
+            34
+          ]
+        }
+      }
+    ],
+    "example": {
+      "income": 40000000,
+      "age": 28,
+      "years": 30,
+      "rate25": 0.314
+    },
+    "notes": [
+      "결과는 입력한 증가율의 시나리오입니다. 예제의 증가율을 현재 은행의 적용표라고 소개하지 않습니다.",
+      "적용 대상은 별도로 확인합니다. 엔진은 만 20~34세와 만기 10년 이상만 확인하므로, 실제 분할상환 주택담보대출 요건까지 자동 판정하지 않습니다.",
+      "장래소득은 대출 심사를 위한 가정값입니다. 앞으로 실제로 받게 될 연봉을 예측한 값이 아닙니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "daechul-ija",
+    "title": "대출 이자·상환표",
+    "description": "매달 갚을 돈과 만기까지의 총이자를 상환 방식에 따라 계산합니다.",
+    "module": "finance",
+    "export": "calcLoanInterest",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "amount",
+        "type": "number",
+        "question": "빌릴 대출 원금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "약정 연 금리는 얼마인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "years",
+        "type": "number",
+        "question": "대출 만기는 몇 년인가요? 개월로 약정했다면 개월 수를 12로 나눕니다.",
+        "required": true,
+        "unit": "년",
+        "min": 0.08333333333333333,
+        "max": 100
+      },
+      {
+        "key": "repay",
+        "type": "enum",
+        "question": "대출 원금을 어떤 방식으로 갚나요?",
+        "required": true,
+        "options": [
+          {
+            "value": "annuity",
+            "label": "매달 원금과 이자의 합계를 같게 갚기(원리금균등)"
+          },
+          {
+            "value": "principal",
+            "label": "매달 원금을 같게 갚고 남은 원금의 이자 내기(원금균등)"
+          },
+          {
+            "value": "bullet",
+            "label": "매달 이자를 내다가 마지막에 원금 전부 갚기(만기일시)"
+          }
+        ]
+      },
+      {
+        "key": "graceYears",
+        "type": "number",
+        "question": "처음에 원금을 갚지 않고 이자만 내는 기간은 몇 년인가요? 개월 수를 알면 12로 나눕니다.",
+        "required": false,
+        "unit": "년",
+        "min": 0,
+        "max": 100,
+        "default": 0,
+        "assumption": "거치기간 없이 첫 달부터 약정 방식으로 갚는 것으로 계산했습니다."
+      }
+    ],
+    "example": {
+      "amount": 300000000,
+      "rate": 0.04,
+      "years": 30,
+      "repay": "annuity"
+    },
+    "notes": [
+      "계산 결과는 입력한 금리·한도를 적용한 비교값입니다. 금융기관의 실제 대출 승인이나 적용 규제를 확정하지 않습니다.",
+      "대출 기간은 정수 개월이어야 합니다. 금리·상환 조건이 바뀌면 다시 계산합니다.",
+      "금리는 만기까지 변하지 않는 것으로 계산합니다. 실제 이자 납부일, 일수 계산과 은행의 원 단위 처리 때문에 청구액과 차이가 날 수 있습니다.",
+      "거치기간은 만기 이내여야 합니다. 원리금균등·원금균등은 거치가 끝난 뒤 적어도 1개월이 남아야 합니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "daehwan",
+    "title": "대출 대환 이자 비교",
+    "description": "기존 대출을 새 대출로 바꿀 때 이자와 비용이 얼마나 달라지는지 계산합니다.",
+    "module": "finance",
+    "export": "calcRefinance",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "balance",
+        "type": "number",
+        "question": "현재 갚지 않은 대출 원금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "currentRate",
+        "type": "number",
+        "question": "현재 대출의 약정 연 금리는 얼마인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "remainingYears",
+        "type": "number",
+        "question": "현재 대출의 남은 기간은 몇 년인가요? 개월로 약정했다면 개월 수를 12로 나눕니다.",
+        "required": true,
+        "unit": "년",
+        "min": 0.08333333333333333,
+        "max": 100
+      },
+      {
+        "key": "newRate",
+        "type": "number",
+        "question": "새 대출의 약정 연 금리는 얼마인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "newYears",
+        "type": "number",
+        "question": "새 대출의 만기는 몇 년인가요? 개월로 약정했다면 개월 수를 12로 나눕니다.",
+        "required": true,
+        "unit": "년",
+        "min": 0.08333333333333333,
+        "max": 100
+      },
+      {
+        "key": "prepayFee",
+        "type": "number",
+        "question": "기존 대출을 지금 갚으면 내는 중도상환수수료는 얼마인가요? 면제를 확인했다면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "costs",
+        "type": "number",
+        "question": "새 대출 때문에 드는 설정비·인지세·감정비 등 추가 비용은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "새 대출의 설정비·인지세·감정비 등 추가 비용은 제외했습니다. 실제 부담액이 있으면 절감액이 줄어듭니다."
+      },
+      {
+        "key": "repay",
+        "type": "enum",
+        "question": "대출 원금을 어떤 방식으로 갚나요?",
+        "required": true,
+        "options": [
+          {
+            "value": "annuity",
+            "label": "매달 원금과 이자의 합계를 같게 갚기(원리금균등)"
+          },
+          {
+            "value": "principal",
+            "label": "매달 원금을 같게 갚고 남은 원금의 이자 내기(원금균등)"
+          },
+          {
+            "value": "bullet",
+            "label": "매달 이자를 내다가 마지막에 원금 전부 갚기(만기일시)"
+          }
+        ]
+      }
+    ],
+    "example": {
+      "balance": 300000000,
+      "currentRate": 0.05,
+      "remainingYears": 25,
+      "newRate": 0.04,
+      "newYears": 25,
+      "prepayFee": 0,
+      "repay": "annuity"
+    },
+    "notes": [
+      "계산 결과는 입력한 금리·한도를 적용한 비교값입니다. 금융기관의 실제 대출 승인이나 적용 규제를 확정하지 않습니다.",
+      "대출 기간은 정수 개월이어야 합니다. 금리·상환 조건이 바뀌면 다시 계산합니다.",
+      "두 대출은 같은 상환 방식으로 비교합니다. 상환 방식이 서로 다르면 대출 이자 계산기를 각각 실행해 비교합니다.",
+      "비용 회수 기간은 첫 달 상환액 차이로 나눈 단순값입니다. 원금균등의 월별 변동과 장기적인 현금 가치는 반영하지 않습니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "jungdo",
+    "title": "중도상환수수료",
+    "description": "약정 만기보다 일찍 갚는 대출금에 대해 기간 비례 수수료를 계산합니다.",
+    "module": "finance",
+    "export": "calcPrepay",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "amount",
+        "type": "number",
+        "question": "이번에 미리 갚을 대출 원금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "feeRate",
+        "type": "number",
+        "question": "대출 약정서의 중도상환수수료율은 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "elapsedMonths",
+        "type": "number",
+        "question": "대출을 받은 뒤 몇 개월이 지났나요?",
+        "required": true,
+        "unit": "개월",
+        "min": 0,
+        "max": 1200,
+        "integer": true
+      },
+      {
+        "key": "feeMonths",
+        "type": "number",
+        "question": "약정서에 정한 수수료 부과 기간은 몇 개월인가요? 면제 상품이라면 0입니다.",
+        "required": true,
+        "unit": "개월",
+        "min": 0,
+        "max": 1200,
+        "integer": true
+      }
+    ],
+    "example": {
+      "amount": 100000000,
+      "feeRate": 0.012,
+      "elapsedMonths": 12,
+      "feeMonths": 36
+    },
+    "notes": [
+      "계산은 남은 부과 기간에 비례해 수수료가 줄어드는 약정에 사용합니다. 모든 대출의 수수료 방식을 재현하지 않습니다.",
+      "면제 한도는 별도로 반영합니다. 일정 금액을 수수료 없이 갚는 약정이 있다면 면제 금액을 확인한 뒤 과금 대상 금액만 넣습니다.",
+      "개월 기준 계산은 일수 기준 은행 청구액과 차이가 날 수 있습니다. 약정서의 요율과 기준일을 확인합니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "gyeongnak",
+    "title": "경락잔금대출 한도",
+    "description": "경매 낙찰가와 감정가에 대출 비율을 적용해 잔금대출의 담보 기준 금액을 계산합니다.",
+    "module": "finance",
+    "export": "calcAuctionLoan",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "bid",
+        "type": "number",
+        "question": "실제 낙찰가 또는 비교할 예상 낙찰가는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "appraisal",
+        "type": "number",
+        "question": "경매 감정가는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "bidLtv",
+        "type": "number",
+        "question": "은행이 낙찰가에 적용하는 대출 비율은 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "appraisalLtv",
+        "type": "number",
+        "question": "은행이 감정가에 적용하는 대출 비율은 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "region",
+        "type": "enum",
+        "question": "방공제를 적용할 부동산은 어느 지역에 있나요?",
+        "required": true,
+        "options": [
+          {
+            "value": "seoul",
+            "label": "서울"
+          },
+          {
+            "value": "metro-over",
+            "label": "과밀억제권역·세종·용인·화성·김포"
+          },
+          {
+            "value": "metro-city",
+            "label": "광역시·안산·경기 광주·파주·이천·평택"
+          },
+          {
+            "value": "other",
+            "label": "그 밖의 지역"
+          }
+        ]
+      },
+      {
+        "key": "rooms",
+        "type": "number",
+        "question": "은행이 방공제에 적용하는 방 수는 몇 실인가요? 집의 실제 방 개수와 다를 수 있습니다.",
+        "required": true,
+        "unit": "실",
+        "min": 1,
+        "max": 10000,
+        "integer": true
+      },
+      {
+        "key": "mci",
+        "type": "boolean",
+        "question": "방공제를 면제하는 MCI 보험이나 MCG 보증에 가입하나요?",
+        "required": false,
+        "default": false,
+        "assumption": "MCI·MCG에 가입하지 않는 것으로 보고 방공제를 차감했습니다."
+      }
+    ],
+    "example": {
+      "bid": 600000000,
+      "appraisal": 800000000,
+      "bidLtv": 0.8,
+      "appraisalLtv": 0.7,
+      "region": "seoul",
+      "rooms": 1
+    },
+    "notes": [
+      "결과는 두 담보 기준 금액 중 작은 값에서 방공제를 뺀 시나리오입니다. DSR·별도 금액 상한·선순위 권리 인수는 이 산식에 포함하지 않습니다.",
+      "실제 대출은 입찰 전에 은행에 확인합니다. 낙찰가 대비 비율을 일반 주택의 확정 대출 비율로 해석하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "yejeokgeum",
+    "title": "예금·적금 이자",
+    "description": "예금이나 적금의 세전 이자, 이자에서 뺄 세금과 만기 수령액을 계산합니다.",
+    "module": "finance",
+    "export": "calcSavings",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "kind",
+        "type": "enum",
+        "question": "목돈을 한 번 맡기는 예금인가요, 매달 넣는 적금인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "deposit",
+            "label": "목돈을 한 번 맡기는 예금"
+          },
+          {
+            "value": "installment",
+            "label": "같은 금액을 매달 넣는 적금"
+          }
+        ]
+      },
+      {
+        "key": "amount",
+        "type": "number",
+        "question": "처음에 맡길 예금 원금은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "kind",
+          "value": "deposit"
+        }
+      },
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "적금에 매달 넣을 금액은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "kind",
+          "value": "installment"
+        }
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "상품의 약정 연 금리는 얼마인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "months",
+        "type": "number",
+        "question": "돈을 넣어 둘 기간은 몇 개월인가요?",
+        "required": true,
+        "unit": "개월",
+        "min": 1,
+        "max": 1200,
+        "integer": true
+      },
+      {
+        "key": "compound",
+        "type": "boolean",
+        "question": "이자가 다음 달 원금에 붙는 월복리 상품인가요?",
+        "required": false,
+        "default": false,
+        "assumption": "이자에 다시 이자를 붙이지 않는 단리로 계산했습니다."
+      },
+      {
+        "key": "taxRate",
+        "type": "number",
+        "question": "이자에서 공제하는 세금 비율은 몇 %인가요? 비과세 요건을 확인했다면 0입니다.",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0.154,
+        "assumption": "일반적인 이자 원천징수율 15.4%를 적용했습니다. 세금우대·비과세 및 종합과세 추가 세금은 반영하지 않았습니다."
+      }
+    ],
+    "example": {
+      "kind": "deposit",
+      "amount": 50000000,
+      "rate": 0.03,
+      "months": 12
+    },
+    "notes": [
+      "적금은 매달 초에 같은 금액을 넣는 것으로 계산합니다. 납입일·우대금리 달성 여부·은행의 일수와 세금 절사 기준에 따라 실제 수령액과 차이가 납니다.",
+      "세후 이자는 입력한 원천징수율 기준입니다. 금융소득 종합과세로 나중에 추가되는 세금까지 계산한 값은 아닙니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "jeonwolse",
+    "title": "전월세 전환·보증금 조정",
+    "description": "보증금과 월세를 서로 바꿀 때 달라지는 보증금과 월세를 계산합니다.",
+    "module": "lease",
+    "export": "calcConversion",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "deposit",
+        "type": "number",
+        "question": "현재 보증금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "현재 월세는 얼마인가요? 전세라면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "direction",
+        "type": "enum",
+        "question": "어느 방향으로 바꾸나요?",
+        "required": true,
+        "options": [
+          {
+            "value": "toMonthly",
+            "label": "보증금을 줄이고 월세 늘리기"
+          },
+          {
+            "value": "toDeposit",
+            "label": "월세를 줄이고 보증금 늘리기"
+          }
+        ]
+      },
+      {
+        "key": "amount",
+        "type": "number",
+        "question": "바꿀 금액은 얼마인가요? 보증금을 줄이면 줄일 보증금, 월세를 줄이면 줄일 한 달 월세를 답합니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "baseRate",
+        "type": "number",
+        "question": "계약 시점의 한국은행 기준금리는 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "agreedRate",
+        "type": "number",
+        "question": "따로 합의한 연 전환율은 몇 %인가요?",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "합의 전환율을 따로 적용하지 않고 기준금리로 계산한 법정 상한을 사용했습니다. 월세를 보증금으로 바꿀 때는 같은 비율로 역산한 참고값입니다."
+      }
+    ],
+    "example": {
+      "deposit": 300000000,
+      "monthly": 0,
+      "direction": "toMonthly",
+      "amount": 100000000,
+      "baseRate": 0.025
+    },
+    "notes": [
+      "법정 상한의 적용 여부는 계약 상황을 먼저 확인합니다. 이 계산은 주택의 보증금을 월세로 전환하는 산식을 사용합니다.",
+      "월세를 보증금으로 바꾸는 역방향 결과는 자유롭게 합의할 금액의 참고값입니다. 엔진은 역방향에도 같은 상한 내 비율을 쓰므로 그 비율이 법적 의무라고 답하지 않습니다.",
+      "전환 금액은 현재 보증금 또는 현재 월세를 넘을 수 없습니다. 초과 입력을 엔진이 자동으로 줄인 값으로 대신 확정하지 말고 사용자에게 확인합니다."
+    ],
+    "comparisons": [
+      {
+        "when": {
+          "key": "direction",
+          "value": "toMonthly"
+        },
+        "left": "amount",
+        "op": "<=",
+        "right": "deposit",
+        "message": "줄일 보증금은 현재 보증금을 넘을 수 없습니다."
+      },
+      {
+        "when": {
+          "key": "direction",
+          "value": "toDeposit"
+        },
+        "left": "amount",
+        "op": "<=",
+        "right": "monthly",
+        "message": "줄일 월세는 현재 월세를 넘을 수 없습니다."
+      }
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "imdaeryo-sangseung",
+    "title": "임대료 상승분",
+    "description": "현재 보증금과 월세에 증액 상한을 적용하고 마지막 계약·인상 이후의 기간을 확인합니다.",
+    "module": "lease",
+    "export": "calcIncrease",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "deposit",
+        "type": "number",
+        "question": "현재 보증금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "현재 월세는 얼마인가요? 전세라면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "monthsSince",
+        "type": "number",
+        "question": "계약 체결 또는 마지막 임대료 인상 뒤 몇 개월이 지났나요? 더 최근 시점부터 셉니다.",
+        "required": true,
+        "unit": "개월",
+        "min": 0,
+        "max": 1200,
+        "integer": true
+      },
+      {
+        "key": "localCap",
+        "type": "number",
+        "question": "지역 조례에서 정한 5%보다 낮은 증액 상한이 있나요? 있으면 그 비율을 답합니다.",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "더 낮은 지역 상한은 반영하지 않고 5% 상한을 적용했습니다. 지역 조례에 더 낮은 상한이 있으면 달라집니다."
+      }
+    ],
+    "example": {
+      "deposit": 300000000,
+      "monthly": 0,
+      "monthsSince": 24
+    },
+    "notes": [
+      "계약 유형을 먼저 확인합니다. 갱신요구권 행사·등록임대주택·신규 계약 여부에 따라 이 상한의 적용 여부가 달라지므로 결과만으로 인상이 적법하다고 단정하지 않습니다.",
+      "계산값은 같은 비율로 보증금과 월세를 늘리는 경우의 상한입니다. 둘을 전환하면서 비율까지 다르게 조정하는 경우에는 전월세 전환 계산을 함께 확인합니다.",
+      "1년이 지나지 않았다면 인상 가능액으로 확정하지 않습니다. 장래 시점 가정 금액과 현재 청구 가능 여부를 구분합니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "imdae-suik",
+    "title": "임대수익률",
+    "description": "집이나 상가를 빌려주어 남는 돈과 투자금 대비 수익률을 계산합니다.",
+    "module": "lease",
+    "export": "calcYield",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "price",
+        "type": "number",
+        "question": "부동산 매입가는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "deposit",
+        "type": "number",
+        "question": "임차인에게 받을 보증금은 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "매달 받을 월세는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "loan",
+        "type": "number",
+        "question": "매입에 사용하는 대출 원금은 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "loanRate",
+        "type": "number",
+        "question": "대출의 약정 연 금리는 얼마인가요?",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredUnless": {
+          "key": "loan",
+          "value": 0
+        }
+      },
+      {
+        "key": "expenses",
+        "type": "number",
+        "question": "1년 재산세·수선비·관리비·보험료 등 운영 경비는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "연 운영 경비는 제외했습니다. 실제 경비가 있으면 순수익과 현금흐름이 줄어듭니다."
+      },
+      {
+        "key": "vacancy",
+        "type": "number",
+        "question": "1년 중 세입자가 없어 월세를 못 받는 비율을 얼마나 가정할까요?",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "공실 없이 1년 내내 월세를 받는 상황을 가정했습니다."
+      },
+      {
+        "key": "acquisitionCost",
+        "type": "number",
+        "question": "취득세·중개보수·등기비용 등 매입 부대비용은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "매입 부대비용은 제외했습니다. 실제 비용을 넣으면 투자금과 수익률이 달라집니다."
+      }
+    ],
+    "example": {
+      "price": 500000000,
+      "deposit": 50000000,
+      "monthly": 1500000,
+      "loan": 200000000,
+      "loanRate": 0.045
+    },
+    "notes": [
+      "수익률은 세전 비교값입니다. 대출 원금 상환, 임대소득세와 매각 시세차익은 반영하지 않습니다.",
+      "자기자본은 매입가와 취득비용을 더한 뒤 보증금·대출을 뺀 금액입니다. 0 이하라면 자기자본수익률이 의미 없다고 설명하고 자금 구성을 확인합니다.",
+      "선택 비용을 생략한 결과는 비용 제외 시나리오입니다. 이를 실제 순수익 예상치라고 소개하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "jeonse-vs-wolse",
+    "title": "전세와 월세 비교",
+    "description": "전세대출 이자와 보증금을 다른 곳에 맡겼다면 받을 이자를 고려해 월 부담을 비교합니다.",
+    "module": "lease",
+    "export": "calcCompare",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "jeonse",
+        "type": "number",
+        "question": "비교할 전세보증금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "wolseDeposit",
+        "type": "number",
+        "question": "비교할 월세집의 보증금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "비교할 월세집의 한 달 월세는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "loanShare",
+        "type": "number",
+        "question": "전세보증금 중 대출로 마련할 비율은 몇 %인가요? 대출이 없으면 0입니다.",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "loanRate",
+        "type": "number",
+        "question": "전세대출의 약정 연 금리는 얼마인가요?",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredUnless": {
+          "key": "loanShare",
+          "value": 0
+        }
+      },
+      {
+        "key": "depositRate",
+        "type": "number",
+        "question": "자기 돈을 예금 등에 맡겼다면 받을 연 이자율을 얼마로 비교할까요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      }
+    ],
+    "example": {
+      "jeonse": 500000000,
+      "wolseDeposit": 100000000,
+      "monthly": 1200000,
+      "loanShare": 0.6,
+      "loanRate": 0.04,
+      "depositRate": 0.03
+    },
+    "notes": [
+      "월 부담은 월세·대출이자·보증금의 기회비용을 합한 비교값입니다. 기회비용은 실제로 지출하는 돈이 아니라 포기한 이자입니다.",
+      "월세 보증금은 자기 돈으로 마련하는 것으로 계산합니다. 월세 보증금에도 대출을 쓴다면 이 비교에 그 이자가 빠진다는 점을 먼저 설명합니다.",
+      "보증보험료·이사비·세액공제·보증금 반환 위험은 별도입니다. 이 결과만으로 어느 계약이 개인에게 더 좋은지 단정하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "bojeung-boheom",
+    "title": "전세보증보험",
+    "description": "전세보증금과 선순위 채권으로 담보 한도를 점검하고 입력한 요율로 보증료를 계산합니다.",
+    "module": "lease",
+    "export": "calcInsurance",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "deposit",
+        "type": "number",
+        "question": "보장받으려는 전세보증금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "homePrice",
+        "type": "number",
+        "question": "보증기관 기준으로 인정되는 주택가격은 얼마인가요? 매매 호가와 다를 수 있습니다.",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "seniorDebt",
+        "type": "number",
+        "question": "먼저 보호되는 근저당 채권최고액과 앞선 임차보증금은 모두 얼마인가요? 등기부와 계약관계를 확인하고, 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "apartment",
+        "type": "boolean",
+        "question": "주택 유형이 아파트인가요?",
+        "required": true
+      },
+      {
+        "key": "metro",
+        "type": "boolean",
+        "question": "집이 서울·경기·인천 중 한 곳에 있나요?",
+        "required": true
+      },
+      {
+        "key": "feeRate",
+        "type": "number",
+        "question": "보증기관이 적용하는 연 보증료율은 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "years",
+        "type": "number",
+        "question": "보증을 받을 기간은 몇 년인가요?",
+        "required": true,
+        "unit": "년",
+        "min": 0.0027397260273972603,
+        "max": 100
+      }
+    ],
+    "example": {
+      "deposit": 400000000,
+      "homePrice": 600000000,
+      "seniorDebt": 0,
+      "apartment": true,
+      "metro": true,
+      "feeRate": 0.00122,
+      "years": 2
+    },
+    "notes": [
+      "가입 여부는 보증기관이 최종 결정합니다. 엔진의 가능 표시는 담보인정비율 90%와 수도권 7억원·그 밖 5억원 한도만 통과했다는 뜻입니다.",
+      "현재 상품 기준을 확인합니다. 신청 시기·주택 유형·임차권·선순위 비율 등의 추가 요건과 보증료 할증·할인은 자동 판정하지 않습니다.",
+      "주택 유형은 요율을 확인하는 데 필요합니다. 엔진은 아파트 여부로 요율을 자동 변경하지 않으므로 사용자가 확인한 요율을 넣습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "yeonche",
+    "title": "연체 임대료 이자",
+    "description": "밀린 월세 원금과 지연 일수에 따른 이자를 계산합니다.",
+    "module": "lease",
+    "export": "calcOverdue",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "한 달 월세는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "months",
+        "type": "number",
+        "question": "밀린 월세의 합계가 몇 개월치인가요? 일부만 밀렸다면 0.5개월처럼 답할 수 있습니다.",
+        "required": true,
+        "unit": "개월",
+        "min": 0,
+        "max": 1200
+      },
+      {
+        "key": "days",
+        "type": "number",
+        "question": "각 월세가 늦어진 일수의 평균은 며칠인가요? 납부기한과 계산 기준일을 알려 주면 평균을 구할 수 있습니다.",
+        "required": true,
+        "unit": "일",
+        "min": 0,
+        "max": 36500
+      },
+      {
+        "key": "annualRate",
+        "type": "number",
+        "question": "이 계약에 적용할 연체이자율은 연 몇 %인가요? 약정 유무와 계약 성격을 확인한 값을 넣습니다.",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      }
+    ],
+    "example": {
+      "monthly": 1000000,
+      "months": 2,
+      "days": 45,
+      "annualRate": 0.05
+    },
+    "notes": [
+      "지연일수는 금액으로 가중한 평균을 사용합니다. 회차별 연체액이 다르면 각 금액과 일수를 받아 가중평균을 구합니다.",
+      "계약 해지는 별도 검토가 필요합니다. 엔진의 2기 기준은 주택·민법상 임대차의 단순 표시이며 상가임대차 등 다른 계약에 그대로 적용하지 않습니다.",
+      "법정이율이나 약정이율의 효력은 계약 성격에 따라 확인합니다. 모든 임대료 연체에 연 5%나 연 20% 상한이 일률 적용된다고 답하지 않습니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "noc",
+    "title": "환산임대료(NOC)",
+    "description": "보증금·월세·관리비를 월 비용으로 합쳐 사무실이나 상가의 실제 사용 면적당 부담을 비교합니다.",
+    "module": "lease",
+    "export": "calcNoc",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "deposit",
+        "type": "number",
+        "question": "임대보증금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "부가가치세를 제외한 한 달 임대료는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "maintenance",
+        "type": "number",
+        "question": "한 달 관리비는 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "area",
+        "type": "number",
+        "question": "공용면적을 포함한 계약면적은 몇 ㎡인가요?",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "exclusive",
+        "type": "number",
+        "question": "실제로 단독 사용하는 전용면적은 몇 ㎡인가요?",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "보증금에 묶이는 돈의 연 비용을 몇 %로 비교할까요? 예금금리나 회사 자금비용을 사용할 수 있습니다.",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "rentFree",
+        "type": "number",
+        "question": "1년 중 임대료를 면제받는 기간은 몇 개월인가요?",
+        "required": false,
+        "unit": "개월",
+        "min": 0,
+        "max": 12,
+        "default": 0,
+        "assumption": "임대료 면제 기간 없이 12개월 모두 월세를 내는 것으로 계산했습니다."
+      }
+    ],
+    "example": {
+      "deposit": 50000000,
+      "monthly": 3000000,
+      "maintenance": 800000,
+      "area": 165,
+      "exclusive": 82,
+      "rate": 0.06
+    },
+    "notes": [
+      "환산임대료는 다른 물건을 같은 기준으로 비교하기 위한 값입니다. 보증금을 월세로 바꾸는 법정 전환율이나 실제 계약 월세를 뜻하지 않습니다.",
+      "전용면적은 계약면적보다 클 수 없습니다. 면적이 뒤바뀌었거나 다른 기준이면 먼저 확인합니다.",
+      "임대료 면제는 월세에만 적용합니다. 관리비·부가가치세·관리비 부과면적 차이는 계약 조건에 맞춰 별도로 확인합니다."
+    ],
+    "comparisons": [
+      {
+        "left": "exclusive",
+        "op": "<=",
+        "right": "area",
+        "message": "전용면적은 계약면적을 넘을 수 없습니다. 면적의 기준을 확인해 주세요."
+      }
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "ganju",
+    "title": "간주임대료",
+    "description": "보증금의 일부를 임대수입으로 보는 금액을 계산해 주택임대소득 계산에 연결합니다.",
+    "module": "lease",
+    "export": "calcDeemed",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "houses",
+        "type": "number",
+        "question": "해당 연도 규정상 소형주택을 제외하고 부부 합산으로 세는 임대 주택은 몇 채인가요?",
+        "required": true,
+        "unit": "채",
+        "min": 0,
+        "max": 10000,
+        "integer": true
+      },
+      {
+        "key": "highValueHouses",
+        "type": "number",
+        "question": "두 채 중 기준시가가 각각 12억원을 넘는 주택은 몇 채인가요?",
+        "required": false,
+        "unit": "채",
+        "min": 0,
+        "max": 2,
+        "integer": true,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "houses",
+          "value": 2
+        }
+      },
+      {
+        "key": "deposits",
+        "type": "number",
+        "question": "계산 대상 주택에서 받은 보증금 합계는 얼마인가요? 제외되는 소형주택의 보증금도 뺍니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "interestIncome",
+        "type": "number",
+        "question": "장부 신고에서 공제할 임대사업 관련 이자·배당 수입은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "임대사업의 이자·배당 수입 공제는 적용하지 않았습니다."
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "계산할 귀속연도에 적용하는 간주임대료의 법정 정기예금이자율은 몇 %인가요?",
+        "required": true,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "days",
+        "type": "number",
+        "question": "계산 대상 보증금을 받은 임대 기간은 해당 연도에 며칠인가요?",
+        "required": true,
+        "unit": "일",
+        "min": 1,
+        "max": 366,
+        "integer": true
+      }
+    ],
+    "example": {
+      "houses": 3,
+      "deposits": 800000000,
+      "rate": 0.031,
+      "days": 365
+    },
+    "notes": [
+      "간주임대료는 세금 자체가 아닙니다. 계산한 금액을 과세 대상 월세 수입에 더한 뒤 주택임대소득세를 계산합니다.",
+      "주택 수·고가주택 기준·소형주택 제외의 적용 연도를 먼저 확인합니다. 이 엔진의 고정 요건이 맞지 않는 연도에는 현행법 계산이라고 답하지 않습니다.",
+      "계산은 보증금 합계가 같은 기간 유지된 경우의 단순 산식입니다. 주택마다 임대 기간이 다르거나 보증금이 변하면 일수별 적수·3억원 공제 배분을 별도 확인합니다.",
+      "주택 수는 부부 합산하되 소득 귀속은 소유자별로 확인합니다. 부부 보증금 전체를 한 사람의 수입으로 합치지 않습니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "imdae-sodeuk",
+    "title": "주택임대소득세",
+    "description": "과세 대상 월세와 간주임대료로 분리과세 세금과 종합과세 증가분을 비교합니다.",
+    "module": "lease",
+    "export": "calcRentalTax",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "rent",
+        "type": "number",
+        "question": "이번 연도 과세 대상 주택에서 받은 월세 수입 합계는 얼마인가요? 비과세 주택의 월세는 제외합니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "deemed",
+        "type": "number",
+        "question": "이번 연도 과세 대상 보증금의 간주임대료는 얼마인가요? 대상이 아님을 확인했다면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "registered",
+        "type": "boolean",
+        "question": "등록임대주택의 경비율·공제 우대 요건을 모두 확인했나요? 단순히 임대사업자등록만 했다는 뜻은 아닙니다.",
+        "required": false,
+        "default": false,
+        "assumption": "등록임대주택의 추가 경비율·공제 우대는 적용하지 않았습니다."
+      },
+      {
+        "key": "otherIncome",
+        "type": "number",
+        "question": "주택임대 외 종합소득금액은 얼마인가요? 총급여가 아니라 근로소득공제·사업 경비 등을 뺀 소득금액입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "actualExpenses",
+        "type": "number",
+        "question": "종합과세 비교에 사용할 장부상 실제 임대 필요경비는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "종합과세 비교는 실제 장부 경비 대신 엔진의 가정 경비율을 적용했습니다. 적법한 추계 경비율을 판정한 값이 아닙니다."
+      }
+    ],
+    "example": {
+      "rent": 18000000,
+      "deemed": 0,
+      "otherIncome": 50000000
+    },
+    "notes": [
+      "월세의 과세 여부를 먼저 확인합니다. 주택 수·국내외 소재지·고가주택 여부를 엔진이 받지 않으므로 비과세 월세를 넣어 세금이 있는 것처럼 답하지 않습니다.",
+      "종합과세 결과는 거친 비교값입니다. 다른 소득금액을 그대로 세율표에 넣고 인적공제·소득공제·세액공제 등을 제외하므로 실제 신고세액이나 최적 신고방식을 확정하지 않습니다.",
+      "실제 필요경비 0원은 별도로 확인합니다. 이 엔진의 0은 실제 경비가 없다는 뜻이 아니라 가정 경비율을 사용하라는 뜻입니다.",
+      "등록임대주택 우대는 등록·임대료 증액 제한 등 요건별로 확인합니다. 건강보험료 변동과 의무 위반 추징은 이 계산에 포함하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "myeongdo",
+    "title": "명도비용",
+    "description": "임차인이 집을 비우는 절차에 드는 소송·집행·보관 비용과 못 받는 월세를 합산합니다.",
+    "module": "lease",
+    "export": "calcEviction",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "area",
+        "type": "number",
+        "question": "짐을 반출할 공간의 전용면적은 몇 ㎡인가요?",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "laborPerPyeong",
+        "type": "number",
+        "question": "견적에서 정한 평당 집행 노무비는 얼마인가요?",
+        "required": true,
+        "unit": "원/평",
+        "min": 0
+      },
+      {
+        "key": "bailiffFee",
+        "type": "number",
+        "question": "예상 집행관 수수료와 여비는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "transport",
+        "type": "number",
+        "question": "사다리차와 운반에 드는 예상 비용은 얼마인가요? 필요 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "storageMonthly",
+        "type": "number",
+        "question": "짐을 보관하는 한 달 창고 비용은 얼마인가요? 필요 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "storageMonths",
+        "type": "number",
+        "question": "짐을 보관할 예상 기간은 몇 개월인가요? 보관하지 않으면 0입니다.",
+        "required": true,
+        "unit": "개월",
+        "min": 0,
+        "max": 1200
+      },
+      {
+        "key": "litigation",
+        "type": "number",
+        "question": "인지·송달료와 변호사 보수 등 예상 소송비용은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "delayMonths",
+        "type": "number",
+        "question": "집을 돌려받지 못해 월세를 받지 못할 기간을 몇 개월로 예상하나요?",
+        "required": false,
+        "unit": "개월",
+        "min": 0,
+        "max": 1200,
+        "default": 0,
+        "assumption": "명도 지연으로 못 받는 월세는 제외하고 직접 비용만 계산했습니다."
+      },
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "집을 돌려받으면 매달 받을 수 있는 월세는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "requiredUnless": {
+          "key": "delayMonths",
+          "value": 0
+        },
+        "default": 0,
+        "assumption": "명도 지연 손실을 계산하지 않을 때는 월세를 사용하지 않았습니다."
+      }
+    ],
+    "example": {
+      "area": 84,
+      "laborPerPyeong": 120000,
+      "bailiffFee": 200000,
+      "transport": 500000,
+      "storageMonthly": 300000,
+      "storageMonths": 3,
+      "litigation": 1500000
+    },
+    "notes": [
+      "비용은 사용자가 입력한 견적·예상 기간을 합산한 시나리오입니다. 전국 공통 표준 보수나 확정 견적이라고 소개하지 않습니다.",
+      "못 받는 월세는 기회비용으로 구분합니다. 실제로 지급하는 소송·집행·보관 비용과 따로 보여줍니다.",
+      "진행 절차는 별도로 확인합니다. 이 계산은 명도 권리, 판결 가능성이나 강제집행을 시작할 수 있는지 판단하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "junggae",
+    "title": "중개보수(복비)",
+    "description": "매매나 임대차 거래에서 한쪽 당사자가 부담할 중개보수의 상한과 부가가치세를 계산합니다.",
+    "module": "brokerage",
+    "export": "calcBrokerage",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "kind",
+        "type": "enum",
+        "question": "어떤 부동산의 거래인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "house",
+            "label": "주택과 그 부속토지"
+          },
+          {
+            "value": "officetel-home",
+            "label": "전용 85㎡ 이하이며 부엌·화장실·목욕시설을 갖춘 오피스텔"
+          },
+          {
+            "value": "other",
+            "label": "상가·토지·위 요건을 충족하지 않는 오피스텔 등"
+          }
+        ]
+      },
+      {
+        "key": "deal",
+        "type": "enum",
+        "question": "사고파는 거래인가요, 빌리는 거래인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "sale",
+            "label": "매매·교환"
+          },
+          {
+            "value": "lease",
+            "label": "전세·월세 임대차"
+          }
+        ]
+      },
+      {
+        "key": "price",
+        "type": "number",
+        "question": "매매라면 거래금액, 임대차라면 보증금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "한 달 월세는 얼마인가요? 전세라면 0원입니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "deal",
+          "value": "lease"
+        }
+      },
+      {
+        "key": "vat",
+        "type": "boolean",
+        "question": "중개보수에 부가가치세 10%를 별도로 붙이는 거래인가요? 중개사의 과세유형과 견적을 확인합니다.",
+        "required": true
+      },
+      {
+        "key": "agreedRate",
+        "type": "number",
+        "question": "중개사와 법정 상한보다 낮은 보수율을 합의했나요? 합의했다면 그 비율을 답합니다.",
+        "required": false,
+        "unit": "소수 비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "별도 합의 요율 없이 법정 상한 요율을 적용했습니다. 상한은 반드시 내야 할 정가가 아닙니다."
+      }
+    ],
+    "example": {
+      "kind": "house",
+      "deal": "sale",
+      "price": 500000000,
+      "vat": true
+    },
+    "notes": [
+      "보수는 거래 당사자 한쪽의 부담액입니다. 매수인과 매도인의 보수를 합친 금액이 아닙니다.",
+      "주택 요율은 지역 조례까지 확인합니다. 엔진은 고정 요율표를 쓰므로 지역별 더 낮은 상한이 있으면 그대로 확정하지 않습니다.",
+      "부가가치세 처리는 견적과 사업자 과세유형에 맞춰 확인합니다. 10% 별도 여부가 아니면 엔진의 0원 표시가 모든 거래의 부가가치세 면제를 뜻하지 않습니다.",
+      "무료 중개 합의는 별도 확인합니다. 이 엔진의 합의 요율 0은 보수 0원이 아니라 상한 적용을 뜻합니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "deunggi",
+    "title": "등기비용",
+    "description": "매매로 부동산을 산 뒤 소유권을 옮길 때 드는 취득세와 등기 비용을 합산합니다.",
+    "module": "registration",
+    "export": "calcRegistration",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "kind",
+        "type": "enum",
+        "question": "매매로 사는 부동산은 무엇인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "house",
+            "label": "주택"
+          },
+          {
+            "value": "officetel",
+            "label": "오피스텔"
+          },
+          {
+            "value": "building",
+            "label": "상가·건물"
+          },
+          {
+            "value": "land",
+            "label": "일반 토지(농지 제외)"
+          }
+        ]
+      },
+      {
+        "key": "price",
+        "type": "number",
+        "question": "매매계약서의 거래금액은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "standardValue",
+        "type": "number",
+        "question": "채권 매입의 기준이 되는 시가표준액은 얼마인가요? 주택 공시가격이나 지자체 확인 자료를 사용합니다.",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "metro",
+        "type": "boolean",
+        "question": "부동산이 특별시 또는 광역시에 있나요? 수도권 여부와는 다른 구분입니다.",
+        "required": true
+      },
+      {
+        "key": "area",
+        "type": "number",
+        "question": "주택의 전용면적은 몇 ㎡인가요?",
+        "required": false,
+        "unit": "㎡",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "kind",
+          "value": "house"
+        }
+      },
+      {
+        "key": "regulated",
+        "type": "boolean",
+        "question": "취득일에 이 주택이 조정대상지역에 있나요?",
+        "required": false,
+        "default": false,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredWhen": {
+          "key": "kind",
+          "value": "house"
+        }
+      },
+      {
+        "key": "houses",
+        "type": "number",
+        "question": "이번에 사는 집까지 포함해 세대가 보유하는 주택은 몇 채인가요? 분양권 등 포함 여부도 확인합니다.",
+        "required": false,
+        "unit": "채",
+        "min": 1,
+        "max": 10000,
+        "integer": true,
+        "default": 1,
+        "assumption": "주택이 아닌 부동산은 주택 수를 세금 판정에 사용하지 않았습니다.",
+        "requiredWhen": {
+          "key": "kind",
+          "value": "house"
+        }
+      },
+      {
+        "key": "firstHome",
+        "type": "boolean",
+        "question": "생애최초 주택 취득세 감면 요건을 확인했나요?",
+        "required": false,
+        "default": false,
+        "assumption": "생애최초 주택 취득세 감면은 적용하지 않았습니다."
+      },
+      {
+        "key": "corporate",
+        "type": "boolean",
+        "question": "개인이 아니라 법인이 사는 부동산인가요?",
+        "required": true
+      },
+      {
+        "key": "temporaryTwo",
+        "type": "boolean",
+        "question": "주택 취득세 중과에서 제외되는 일시적 2주택 요건을 확인했나요?",
+        "required": false,
+        "default": false,
+        "assumption": "일시적 2주택에 따른 중과 제외는 적용하지 않았습니다."
+      },
+      {
+        "key": "selfRegistration",
+        "type": "boolean",
+        "question": "법무사를 쓰지 않고 직접 등기하나요?",
+        "required": false,
+        "default": false,
+        "assumption": "법무사에게 등기를 맡기는 경우로 계산했습니다. 보수는 별도로 확인한 금액을 사용합니다."
+      },
+      {
+        "key": "legalFee",
+        "type": "number",
+        "question": "법무사와 협의한 총 보수는 얼마인가요? 견적에서 별도 비용과 중복되지 않는 금액을 넣습니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택한 계산에 쓰지 않는 항목은 제외했습니다.",
+        "requiredUnless": {
+          "key": "selfRegistration",
+          "value": true
+        }
+      },
+      {
+        "key": "discountRate",
+        "type": "number",
+        "question": "채권을 사서 바로 되팔 때 적용하는 할인율은 몇 %인가요? 10%라면 10을 답합니다.",
+        "required": true,
+        "unit": "%",
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "mortgageMax",
+        "type": "number",
+        "question": "새로 설정할 근저당의 채권최고액은 얼마인가요? 근저당 설정이 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "eForm",
+        "type": "boolean",
+        "question": "전자표준양식인 e-Form으로 소유권이전등기를 신청하나요?",
+        "required": false,
+        "default": false,
+        "assumption": "서면 등기신청 수수료를 적용했습니다. e-Form이나 완전 전자신청과는 수수료가 다릅니다."
+      }
+    ],
+    "example": {
+      "kind": "house",
+      "price": 500000000,
+      "standardValue": 350000000,
+      "metro": true,
+      "area": 84,
+      "regulated": false,
+      "houses": 1,
+      "corporate": false,
+      "legalFee": 300000,
+      "discountRate": 10,
+      "mortgageMax": 0
+    },
+    "notes": [
+      "계산은 매매 취득 전용입니다. 증여·상속·농지 취득과 특수 감면은 해당 계산기로 별도 확인합니다.",
+      "시가표준액은 실제 확인한 값을 사용합니다. 엔진에 0을 넣으면 거래가의 70%로 추정하므로 미확인 값을 0으로 보내지 않습니다.",
+      "채권 할인율은 등록 당일 고시값을 확인합니다. 이 필드만 백분율 숫자를 사용하므로 10%는 10이고 0.1이 아닙니다.",
+      "주택 면적과 주택 수는 실제 법적 판정에 맞게 확인합니다. 면적 85㎡ 기준만 사용하는 엔진이므로 지역별 국민주택규모 예외 등 특수한 상황을 확정 계산으로 답하지 않습니다.",
+      "합계에는 취득세 관련 세금·인지세·채권 할인비용·등기 수수료·입력한 법무사 보수와 근저당 관련 비용이 들어갑니다. 중개보수나 누락된 실비는 추가해야 합니다."
+    ],
+    "guards": [
+      {
+        "when": {
+          "key": "kind",
+          "value": "house"
+        },
+        "key": "area",
+        "min": 1e-06,
+        "message": "주택의 실제 전용면적은 0보다 커야 합니다."
+      }
+    ],
+    "rulesKind": "dated"
+  }
+]

@@ -1,0 +1,4 @@
+interface:
+  display_name: "전세와 월세 비교"
+  short_description: "전세대출 이자와 보증금을 다른 곳에 맡겼다면 받을 이자를 고려해 월 부담을 비교합니다."
+  default_prompt: "$jeonse-vs-wolse 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

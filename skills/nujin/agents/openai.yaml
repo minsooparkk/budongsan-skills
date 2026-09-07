@@ -1,0 +1,4 @@
+interface:
+  display_name: "누진세율 속산표"
+  short_description: "공제를 마친 과세표준에 선택한 누진세율표를 적용해 기본 세액을 계산합니다."
+  default_prompt: "$nujin 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

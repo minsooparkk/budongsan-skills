@@ -1,0 +1,4 @@
+interface:
+  display_name: "경매 적정 입찰가"
+  short_description: "경매로 산 부동산의 임대수익을 기준으로 입찰가격 시나리오를 계산합니다."
+  default_prompt: "$jeokjeong-ipchal 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

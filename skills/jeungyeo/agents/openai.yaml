@@ -1,0 +1,4 @@
+interface:
+  display_name: "증여세"
+  short_description: "가족이나 다른 사람에게 재산을 받을 때 내는 증여세를 계산합니다."
+  default_prompt: "$jeungyeo 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

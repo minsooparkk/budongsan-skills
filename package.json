@@ -1,0 +1,14 @@
+{
+  "name": "budongsan-skills",
+  "version": "0.1.0",
+  "private": true,
+  "description": "질문에 답하면 부동산 세금과 비용을 계산하는 Codex·Claude Code 스킬 모음",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node scripts/verify.cjs",
+    "generate": "node scripts/generate-skills.cjs",
+    "check": "node scripts/verify.cjs",
+    "build": "node scripts/build-engine.cjs"
+  }
+}

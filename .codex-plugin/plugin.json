@@ -1,0 +1,28 @@
+{
+  "name": "budongsan-skills",
+  "version": "0.1.0",
+  "description": "질문에 답하면 부동산 세금·대출·비용을 계산합니다. 필수 질문과 생략 가능한 질문을 구분하고 기본 전제를 함께 보여줍니다.",
+  "author": {
+    "name": "minsooparkk",
+    "url": "https://github.com/minsooparkk"
+  },
+  "homepage": "https://github.com/minsooparkk/budongsan-skills",
+  "repository": "https://github.com/minsooparkk/budongsan-skills",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "부동산 계산 도우미",
+    "shortDescription": "질문에 답하면 세금과 비용을 계산합니다",
+    "longDescription": "부동산박사 계산기를 바탕으로 만든 58개 대화형 계산 스킬입니다. 필요한 정보는 먼저 묻고, 선택 정보를 생략하면 어떤 전제를 적용했는지 결과와 함께 설명합니다. 세금·대출·전월세·중개보수·경매·면적 계산을 지원합니다.",
+    "developerName": "minsooparkk",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "집을 살 때 내는 세금을 계산해 주세요.",
+      "전세와 월세 중 어느 쪽이 비용이 적은지 비교해 주세요.",
+      "대출 이자를 계산하고 매달 갚을 돈을 알려 주세요."
+    ]
+  }
+}

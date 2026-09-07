@@ -1,0 +1,4 @@
+interface:
+  display_name: "지적측량수수료"
+  short_description: "토지 측량의 기본단가·면적·필지 수로 측량비를 거칠게 추정합니다."
+  default_prompt: "$jijeok 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

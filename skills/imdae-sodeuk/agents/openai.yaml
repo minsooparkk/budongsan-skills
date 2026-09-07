@@ -1,0 +1,4 @@
+interface:
+  display_name: "주택임대소득세"
+  short_description: "과세 대상 월세와 간주임대료로 분리과세 세금과 종합과세 증가분을 비교합니다."
+  default_prompt: "$imdae-sodeuk 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

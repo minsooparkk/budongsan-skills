@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "capturedOn": "2026-09-07",
+  "sourceProject": "budongsanbaksa calculator modules",
+  "sourceCommit": "7ff8a4cb66ab2b8089ee7d37e61d65943ab17302",
+  "sourceState": "working-tree snapshot; source hashes identify uncommitted modifications",
+  "sourceFiles": [
+    {
+      "source": "web/lib/calc/acquisition.ts",
+      "path": "engine/src/acquisition.ts",
+      "sha256": "e57abd97dfb9fde5e7df48bc58be4042087b1d0f7b8863071d73265bc006f52b"
+    },
+    {
+      "source": "web/lib/calc/auction.ts",
+      "path": "engine/src/auction.ts",
+      "sha256": "8e930e699dec7b45fd8dd7d8eebab4ffb2b29bbc200c7fff578156ad7d80dc37"
+    },
+    {
+      "source": "web/lib/calc/bands.ts",
+      "path": "engine/src/bands.ts",
+      "sha256": "3f4342533310110dcdcb5c0556966ddf4df630a2871efb8ab45c1aef0a6833fd"
+    },
+    {
+      "source": "web/lib/boyuse.ts",
+      "path": "engine/src/boyuse.ts",
+      "sha256": "7e28bbcba5dd74ef64f79a027569863ca065769307349801df124890fe1ee864"
+    },
+    {
+      "source": "web/lib/calc/brokerage.ts",
+      "path": "engine/src/brokerage.ts",
+      "sha256": "03d75b0413ae35e820405215911783ff3cb2f8a4b401821711f8b240335d02d4"
+    },
+    {
+      "source": "web/lib/calc/corporate.ts",
+      "path": "engine/src/corporate.ts",
+      "sha256": "a535b73db5cbde4890ab5e9edd56b0b4263dc92c55eb97234f9ee4087d13232e"
+    },
+    {
+      "source": "web/lib/calc/fees.ts",
+      "path": "engine/src/fees.ts",
+      "sha256": "4f704e35dbc19aa43bc3ca969eb4471f792e37062d9a1fb66b86f2c100d618f4"
+    },
+    {
+      "source": "web/lib/calc/finance.ts",
+      "path": "engine/src/finance.ts",
+      "sha256": "0342553f0a89d7c03a80c07df0c199f5b6382c02e1309c8c72d7f9cfa2cf1a3d"
+    },
+    {
+      "source": "web/lib/calc/gift.ts",
+      "path": "engine/src/gift.ts",
+      "sha256": "0f66c190baacaa1fb1a7fc9c80fc94d68c4a9419f0f62d01daaec47996d15066"
+    },
+    {
+      "source": "web/lib/calc/heirs.ts",
+      "path": "engine/src/heirs.ts",
+      "sha256": "4436376b2099e94d048ecb43afe0f3e02ad524b5afa6d778c053afcbf62adc36"
+    },
+    {
+      "source": "web/lib/calc/inheritance.ts",
+      "path": "engine/src/inheritance.ts",
+      "sha256": "b8ce44a20cc884a5b5ce3265c57b01da96c17717f15020d7f2eed0a4ec644914"
+    },
+    {
+      "source": "web/lib/calc/invest.ts",
+      "path": "engine/src/invest.ts",
+      "sha256": "fe378eaa5049da60150d5b14b7c03d58bd90f834ff9d78ceb25b3419403d440c"
+    },
+    {
+      "source": "web/lib/calc/lease.ts",
+      "path": "engine/src/lease.ts",
+      "sha256": "b628e4820c6b0bbb6048cb298bf68a20148a2c11a7ef17bafae9d430ad69cbb5"
+    },
+    {
+      "source": "web/lib/calc/progressive.ts",
+      "path": "engine/src/progressive.ts",
+      "sha256": "2f229b007240972e855d4396c44dbbf8c66aaefbbe73ee27a4205492d238dbf4"
+    },
+    {
+      "source": "web/lib/calc/property.ts",
+      "path": "engine/src/property.ts",
+      "sha256": "4fe2caa055eef4bb07e9b6752679ebb2b2b22f4e73f707af875fe4970cf2ce41"
+    },
+    {
+      "source": "web/lib/calc/registration.ts",
+      "path": "engine/src/registration.ts",
+      "sha256": "b9bdf3178df5d6c54b4290b7ee6c11742b88a5fbf49505314e0b5fbfcb23b661"
+    },
+    {
+      "source": "web/lib/calc/trace.ts",
+      "path": "engine/src/trace.ts",
+      "sha256": "f2523981a620a423ae77715d1dc1eb8c11b2267231d9186c6c82af6462c8058e"
+    },
+    {
+      "source": "web/lib/calc/transfer.ts",
+      "path": "engine/src/transfer.ts",
+      "sha256": "2807ef4f0f6de539eb23e7fbe4155515379689afe637b1819ded5fc7f4b09cc0"
+    },
+    {
+      "source": "web/lib/calc/units.ts",
+      "path": "engine/src/units.ts",
+      "sha256": "2501fccd5cbcf52af536e817ea3cf35afac8a2c3f4efca8a450376eabcf1c22c"
+    },
+    {
+      "source": "web/lib/calc/validation.ts",
+      "path": "engine/src/validation.ts",
+      "sha256": "12e06b7212636f04146d974b05c8ea6e7875fdb9d965f4185859471878f92247"
+    },
+    {
+      "source": "web/lib/calc/won.ts",
+      "path": "engine/src/won.ts",
+      "sha256": "4eea01568e54fc69f07de8f2e8de5e30b5ba5fa3572bff4eec135c289d9b75f1"
+    }
+  ],
+  "testFiles": [
+    {
+      "source": "web/scripts/verify-calc.cjs",
+      "path": "tests/upstream-calc.cjs",
+      "sourceSha256": "a719847faf874d167187d7fcd010329a41ddfca8616096557c820b28cf13b6e5",
+      "adaptedSha256": "f27d26f710cfa1a6afce8db997af2dfb5de197a2e9df0416c311f4c36fe9b00f"
+    },
+    {
+      "source": "web/scripts/verify-phase1.cjs",
+      "path": "tests/upstream-phase1.cjs",
+      "sourceSha256": "9b7bc382b34449c4fca6395259a10ae632f7e102ad858f6af984589a1b68a867",
+      "adaptedSha256": "d573179715d8461f20af6368d3828fa28cccabdb1836600db84496444fc9fd17"
+    },
+    {
+      "source": "web/scripts/verify-phase2.cjs",
+      "path": "tests/upstream-phase2.cjs",
+      "sourceSha256": "65a396e82608143fa48e5cad5ff36174bf9ca50f6671647a4844e66487ebe640",
+      "adaptedSha256": "232a458406405753130ac7e5acc33605ae229687de4d1adde2e312039c50e8f2"
+    },
+    {
+      "source": "web/scripts/verify-phase3.cjs",
+      "path": "tests/upstream-phase3.cjs",
+      "sourceSha256": "7516a1aadf59bb64d77ed150738ac18db4ddf9608796660b15d05dbf73836889",
+      "adaptedSha256": "eda3171eafd5a6313307bb5ba5a66ecd14fb778292dc3cf2e2ddbe658c1870f7"
+    },
+    {
+      "source": "web/scripts/verify-phase4.cjs",
+      "path": "tests/upstream-phase4.cjs",
+      "sourceSha256": "aee81bfcd98dce47f81fd772d1f1acdebd5c95ce8271c569bfbc9d1147808dcc",
+      "adaptedSha256": "09d85d4e3370cd5d171bfb77959493525b55f9204ae56c03f70e9dbdf90251a2"
+    },
+    {
+      "source": "web/scripts/verify-audit-calc-core.cjs",
+      "path": "tests/upstream-audit-calc-core.cjs",
+      "sourceSha256": "92096f56d1c8944a113823b08850e4a3f8867a7563ef99b0fa5cec747c102bb5",
+      "adaptedSha256": "ca3bbaf4d26538f71c9a78ab15a1e64886653548d4a30e6ed2691d0f32bf9b18"
+    }
+  ],
+  "excluded": [
+    "web/lib/calc/urlState.ts (browser and React integration)"
+  ]
+}

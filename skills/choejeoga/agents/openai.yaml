@@ -1,0 +1,4 @@
+interface:
+  display_name: "경매 최저가 · 입찰보증금"
+  short_description: "경매가 유찰될 때 최저매각가격과 필요한 입찰보증금이 얼마나 줄어드는지 계산합니다."
+  default_prompt: "$choejeoga 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

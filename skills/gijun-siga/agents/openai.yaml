@@ -1,0 +1,4 @@
+interface:
+  display_name: "건물 기준시가"
+  short_description: "국세청 산식에 면적과 해당 연도 지수를 넣어 건물 기준시가를 계산합니다."
+  default_prompt: "$gijun-siga 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

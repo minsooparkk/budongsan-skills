@@ -1,0 +1,4 @@
+interface:
+  display_name: "재산세"
+  short_description: "부동산을 보유하면서 내는 재산세와 함께 붙는 세금을 계산합니다."
+  default_prompt: "$jaesan 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

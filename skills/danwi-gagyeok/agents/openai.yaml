@@ -1,0 +1,4 @@
+interface:
+  display_name: "평당 · ㎡당 가격"
+  short_description: "전체 부동산 가격을 1평당 가격과 1㎡당 가격으로 바꿉니다."
+  default_prompt: "$danwi-gagyeok 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

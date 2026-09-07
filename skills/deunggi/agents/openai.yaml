@@ -1,0 +1,4 @@
+interface:
+  display_name: "등기비용"
+  short_description: "매매로 부동산을 산 뒤 소유권을 옮길 때 드는 취득세와 등기 비용을 합산합니다."
+  default_prompt: "$deunggi 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

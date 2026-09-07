@@ -1,0 +1,4 @@
+interface:
+  display_name: "주택담보대출 가능액"
+  short_description: "집값으로 정한 한도와 소득으로 정한 한도를 비교해 더 작은 대출액을 계산합니다."
+  default_prompt: "$daechul-hando 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

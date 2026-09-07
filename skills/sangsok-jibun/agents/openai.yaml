@@ -1,0 +1,4 @@
+interface:
+  display_name: "법정상속분"
+  short_description: "배우자와 자녀 등 가족이 법에 따라 나누는 기본 상속 비율을 계산합니다."
+  default_prompt: "$sangsok-jibun 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "전월세 전환·보증금 조정"
+  short_description: "보증금과 월세를 서로 바꿀 때 달라지는 보증금과 월세를 계산합니다."
+  default_prompt: "$jeonwolse 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

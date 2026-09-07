@@ -1,0 +1,4 @@
+interface:
+  display_name: "임대료 상승분"
+  short_description: "현재 보증금과 월세에 증액 상한을 적용하고 마지막 계약·인상 이후의 기간을 확인합니다."
+  default_prompt: "$imdaeryo-sangseung 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "종합소득세"
+  short_description: "여러 소득을 합산한 뒤 공제와 이미 낸 세금을 반영해 종합소득세를 추정합니다."
+  default_prompt: "$jonghap 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

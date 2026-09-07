@@ -1,0 +1,4 @@
+interface:
+  display_name: "예금·적금 이자"
+  short_description: "예금이나 적금의 세전 이자, 이자에서 뺄 세금과 만기 수령액을 계산합니다."
+  default_prompt: "$yejeokgeum 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

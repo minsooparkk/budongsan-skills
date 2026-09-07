@@ -1,0 +1,10 @@
+.omx/
+inventory.json
+node_modules/
+.DS_Store
+*.log
+answers*.json
+coverage/
+dist/
+.env*
+__pycache__/

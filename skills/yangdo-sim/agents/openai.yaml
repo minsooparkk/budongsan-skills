@@ -1,0 +1,4 @@
+interface:
+  display_name: "양도세 개편안 비교"
+  short_description: "같은 주택을 2026년부터 2029년 사이에 판다는 가정으로 기준 산식과 개편안 시나리오를 비교합니다."
+  default_prompt: "$yangdo-sim 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

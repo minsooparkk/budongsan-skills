@@ -1,0 +1,432 @@
+{
+  "dsr": {
+    "income": 70000000,
+    "existing": 0,
+    "amount": 300000000,
+    "rate": 0.04,
+    "years": 30,
+    "repay": "annuity",
+    "stress": 0.015,
+    "limit": 0.4
+  },
+  "dti": {
+    "income": 70000000,
+    "amount": 300000000,
+    "rate": 0.04,
+    "years": 30,
+    "existingMortgage": 0,
+    "otherInterest": 0,
+    "limit": 0.4
+  },
+  "rti": {
+    "rent": 36000000,
+    "amount": 400000000,
+    "rate": 0.05,
+    "existingInterest": 0,
+    "isHousing": true
+  },
+  "ltv": {
+    "price": 800000000,
+    "ltv": 0.7,
+    "senior": 0,
+    "region": "seoul",
+    "rooms": 1,
+    "cap": 600000000
+  },
+  "daechul-hando": {
+    "price": 800000000,
+    "ltv": 0.7,
+    "senior": 0,
+    "region": "seoul",
+    "rooms": 1,
+    "cap": 600000000,
+    "income": 80000000,
+    "existing": 0,
+    "rate": 0.04,
+    "years": 30,
+    "stress": 0.015,
+    "dsrLimit": 0.4
+  },
+  "chujeong-sodeuk": {
+    "method": "health",
+    "healthMonthly": 150000,
+    "healthRate": 0.03595,
+    "recognition": 0.95,
+    "capAmount": 50000000
+  },
+  "jangrae-sodeuk": {
+    "income": 40000000,
+    "age": 28,
+    "years": 30,
+    "rate25": 0.314
+  },
+  "daechul-ija": {
+    "amount": 300000000,
+    "rate": 0.04,
+    "years": 30,
+    "repay": "annuity"
+  },
+  "daehwan": {
+    "balance": 300000000,
+    "currentRate": 0.05,
+    "remainingYears": 25,
+    "newRate": 0.04,
+    "newYears": 25,
+    "prepayFee": 0,
+    "repay": "annuity"
+  },
+  "jungdo": {
+    "amount": 100000000,
+    "feeRate": 0.012,
+    "elapsedMonths": 12,
+    "feeMonths": 36
+  },
+  "gyeongnak": {
+    "bid": 600000000,
+    "appraisal": 800000000,
+    "bidLtv": 0.8,
+    "appraisalLtv": 0.7,
+    "region": "seoul",
+    "rooms": 1
+  },
+  "yejeokgeum": {
+    "kind": "deposit",
+    "amount": 50000000,
+    "rate": 0.03,
+    "months": 12
+  },
+  "jeonwolse": {
+    "deposit": 300000000,
+    "monthly": 0,
+    "direction": "toMonthly",
+    "amount": 100000000,
+    "baseRate": 0.025
+  },
+  "imdaeryo-sangseung": {
+    "deposit": 300000000,
+    "monthly": 0,
+    "monthsSince": 24
+  },
+  "imdae-suik": {
+    "price": 500000000,
+    "deposit": 50000000,
+    "monthly": 1500000,
+    "loan": 200000000,
+    "loanRate": 0.045
+  },
+  "jeonse-vs-wolse": {
+    "jeonse": 500000000,
+    "wolseDeposit": 100000000,
+    "monthly": 1200000,
+    "loanShare": 0.6,
+    "loanRate": 0.04,
+    "depositRate": 0.03
+  },
+  "bojeung-boheom": {
+    "deposit": 400000000,
+    "homePrice": 600000000,
+    "seniorDebt": 0,
+    "apartment": true,
+    "metro": true,
+    "feeRate": 0.00122,
+    "years": 2
+  },
+  "yeonche": {
+    "monthly": 1000000,
+    "months": 2,
+    "days": 45,
+    "annualRate": 0.05
+  },
+  "noc": {
+    "deposit": 50000000,
+    "monthly": 3000000,
+    "maintenance": 800000,
+    "area": 165,
+    "exclusive": 82,
+    "rate": 0.06
+  },
+  "ganju": {
+    "houses": 3,
+    "deposits": 800000000,
+    "rate": 0.031,
+    "days": 365
+  },
+  "imdae-sodeuk": {
+    "rent": 18000000,
+    "deemed": 0,
+    "otherIncome": 50000000
+  },
+  "myeongdo": {
+    "area": 84,
+    "laborPerPyeong": 120000,
+    "bailiffFee": 200000,
+    "transport": 500000,
+    "storageMonthly": 300000,
+    "storageMonths": 3,
+    "litigation": 1500000
+  },
+  "junggae": {
+    "kind": "house",
+    "deal": "sale",
+    "price": 500000000,
+    "vat": true
+  },
+  "deunggi": {
+    "kind": "house",
+    "price": 500000000,
+    "standardValue": 350000000,
+    "metro": true,
+    "area": 84,
+    "regulated": false,
+    "houses": 1,
+    "corporate": false,
+    "legalFee": 300000,
+    "discountRate": 10,
+    "mortgageMax": 0
+  },
+  "baedang": {
+    "price": 400000000,
+    "costs": 2000000,
+    "region": "seoul",
+    "tenant": 0,
+    "tax": 0,
+    "mortgage1": 250000000,
+    "mortgage2": 0,
+    "mortgage3": 0
+  },
+  "beopmusa": {
+    "base": 300000000
+  },
+  "chaegwon": {
+    "kind": "house",
+    "standardValue": 300000000,
+    "metro": false,
+    "discountRate": 8
+  },
+  "choejeoga": {
+    "appraisal": 500000000,
+    "failures": 1,
+    "reduction": 0.2
+  },
+  "daeji-jibun": {
+    "siteArea": 10000,
+    "myExclusive": 59,
+    "totalExclusive": 30000,
+    "landPrice": 2000000
+  },
+  "danwi-gagyeok": {
+    "price": 600000000,
+    "area": 59,
+    "unit": "sqm"
+  },
+  "gamjeong": {
+    "method": "income",
+    "noi": 24000000,
+    "capRate": 0.04
+  },
+  "gamjeong-susuryo": {
+    "value": 300000000
+  },
+  "geonmul-buga": {
+    "price": 600000000,
+    "landStd": 250000000,
+    "buildingStd": 150000000
+  },
+  "geonpye-yongjeok": {
+    "siteArea": 200,
+    "buildingArea": 100,
+    "floorArea": 300,
+    "maxCoverage": 0.6,
+    "maxFar": 2
+  },
+  "gijun-siga": {
+    "area": 80,
+    "unitPrice": 800000,
+    "structureIndex": 1,
+    "useIndex": 1,
+    "locationIndex": 1,
+    "residualRate": 0.75
+  },
+  "gilyi": {
+    "value": 30,
+    "unit": "m"
+  },
+  "gyeongmae-biyong": {
+    "claim": 100000000,
+    "appraisal": 300000000,
+    "parties": 3
+  },
+  "inji": {
+    "amount": 300000000,
+    "isHouse": true
+  },
+  "jaegeonchuk": {
+    "completedYear": 2000,
+    "limitYears": 30
+  },
+  "janjon": {
+    "newCost": 200000000,
+    "age": 10,
+    "life": 40,
+    "salvage": 0.1
+  },
+  "jeokjeong-ipchal": {
+    "monthly": 1000000,
+    "deposit": 20000000,
+    "targetYield": 0.04
+  },
+  "jeokjeong-maesu": {
+    "monthly": 1000000,
+    "deposit": 20000000,
+    "targetYield": 0.04
+  },
+  "jijeok": {
+    "kind": "boundary",
+    "area": 400,
+    "parcels": 1,
+    "baseFee": 600000
+  },
+  "jiyeok": {
+    "buildingValue": 100000000,
+    "kind": "house",
+    "oneHouse": true,
+    "riskMultiple": 1
+  },
+  "jonghap": {
+    "hasEarned": false,
+    "business": 30000000,
+    "rental": 0,
+    "other": 0
+  },
+  "nalja": {
+    "from": "2025-01-01",
+    "to": "2026-01-01"
+  },
+  "nujin": {
+    "taxBase": 30000000,
+    "table": "income"
+  },
+  "pyeongsu": {
+    "value": 59,
+    "unit": "sqm"
+  },
+  "remodeling": {
+    "cost": 10000000,
+    "rentIncrease": 100000,
+    "years": 5
+  },
+  "chwideuk": {
+    "cause": "purchase",
+    "kind": "house",
+    "price": 500000000,
+    "area": 84,
+    "regulated": false,
+    "houses": 1,
+    "corporate": false,
+    "temporaryTwo": false,
+    "soleHeirHouse": false,
+    "specialCase": false,
+    "acquisitionYear": 2026
+  },
+  "jeungyeo": {
+    "year": 2026,
+    "month": 8,
+    "relation": "lineal-desc",
+    "minor": false,
+    "realEstate": 500000000,
+    "cash": 0,
+    "stock": 0,
+    "etc": 0,
+    "assumedDebt": 0,
+    "priorGift": 0,
+    "usedDeduction": 0,
+    "usedMarriageBirth": 0,
+    "priorTaxBase": 0,
+    "priorGiftGrossTax": 0,
+    "priorIncludedDeduction": 0,
+    "priorIncludedMarriageBirth": 0,
+    "priorDetailsConfirmed": false,
+    "generationSkip": false,
+    "specialCase": false
+  },
+  "sangsok": {
+    "year": 2026,
+    "month": 8,
+    "house": 1200000000,
+    "land": 0,
+    "deposit": 300000000,
+    "stock": 0,
+    "etc": 0,
+    "debt": 200000000,
+    "financialDebt": 200000000,
+    "priorGift": 0,
+    "priorGiftTaxPaid": 0,
+    "hasSpouse": true,
+    "children": 2,
+    "minors": 0,
+    "elders": 0,
+    "spouseActual": 600000000,
+    "houseSecuredDebt": 200000000,
+    "specialCase": false
+  },
+  "jaesan": {
+    "kind": "house",
+    "price": 800000000,
+    "oneHouse": true,
+    "urban": true,
+    "prevPrice": 750000000,
+    "taxYear": 2026
+  },
+  "beopin-yangdo": {
+    "kind": "house",
+    "price": 1500000000,
+    "cost": 1000000000,
+    "otherIncome": 100000000,
+    "unregistered": false,
+    "businessYearStart": 2026,
+    "specialCase": false
+  },
+  "sangsok-jibun": {
+    "hasSpouse": true,
+    "children": 2,
+    "parents": 0,
+    "siblings": 0,
+    "specialCase": false
+  },
+  "yangdo": {
+    "single": true,
+    "houses": 1,
+    "regulated": false,
+    "salePrice": 1500000000,
+    "buyPrice": 800000000,
+    "holdYears": 8,
+    "liveYears": 4,
+    "resident": true,
+    "saleYear": 2026,
+    "propertyKind": "house",
+    "specialCase": false,
+    "regulatedAtAcquisition": false
+  },
+  "yangdo-sim": {
+    "single": true,
+    "houses": 1,
+    "regulated": false,
+    "salePrice": 1500000000,
+    "buyPrice": 800000000,
+    "holdYears": 8,
+    "liveYears": 4,
+    "resident": true,
+    "saleYear": 2026,
+    "propertyKind": "house",
+    "specialCase": false,
+    "regulatedAtAcquisition": false
+  },
+  "boyuse": {
+    "caseKey": "sole-live",
+    "price": 1500000000,
+    "age": 65,
+    "holdYears": 10,
+    "liveYears": 8,
+    "specialCase": false
+  }
+}

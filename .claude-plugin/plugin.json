@@ -1,0 +1,13 @@
+{
+  "name": "budongsan-skills",
+  "version": "0.1.0",
+  "description": "질문에 답하면 부동산 세금·대출·비용을 계산합니다. 필수 질문과 생략 가능한 질문을 구분하고 기본 전제를 함께 보여줍니다.",
+  "author": {
+    "name": "minsooparkk",
+    "url": "https://github.com/minsooparkk"
+  },
+  "homepage": "https://github.com/minsooparkk/budongsan-skills",
+  "repository": "https://github.com/minsooparkk/budongsan-skills",
+  "license": "MIT",
+  "skills": "./skills/"
+}

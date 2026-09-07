@@ -1,0 +1,4 @@
+interface:
+  display_name: "추정·인정소득"
+  short_description: "보험료나 카드 사용액으로 소득을 역산하고 입력한 인정 비율과 상한을 적용합니다."
+  default_prompt: "$chujeong-sodeuk 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

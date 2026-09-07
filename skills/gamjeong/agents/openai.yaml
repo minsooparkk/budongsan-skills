@@ -1,0 +1,4 @@
+interface:
+  display_name: "감정평가 (원가·비교·수익 8방식)"
+  short_description: "부동산 가격이나 연 임대료를 선택한 평가 방식으로 추정합니다. 선택한 방식에 필요한 정보만 묻습니다."
+  default_prompt: "$gamjeong 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

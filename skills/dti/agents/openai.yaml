@@ -1,0 +1,4 @@
+interface:
+  display_name: "소득 대비 빚 비율(DTI)"
+  short_description: "주택담보대출 상환액과 다른 대출의 이자가 연소득에서 차지하는 비율을 계산합니다."
+  default_prompt: "$dti 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

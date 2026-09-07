@@ -1,0 +1,4 @@
+interface:
+  display_name: "건물 부가가치세"
+  short_description: "토지와 건물을 함께 거래할 때 과세 대상 건물에 붙는 부가가치세를 계산합니다."
+  default_prompt: "$geonmul-buga 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

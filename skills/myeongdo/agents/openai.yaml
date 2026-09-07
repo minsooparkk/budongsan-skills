@@ -1,0 +1,4 @@
+interface:
+  display_name: "명도비용"
+  short_description: "임차인이 집을 비우는 절차에 드는 소송·집행·보관 비용과 못 받는 월세를 합산합니다."
+  default_prompt: "$myeongdo 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

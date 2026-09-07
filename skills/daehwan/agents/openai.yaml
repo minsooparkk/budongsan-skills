@@ -1,0 +1,4 @@
+interface:
+  display_name: "대출 대환 이자 비교"
+  short_description: "기존 대출을 새 대출로 바꿀 때 이자와 비용이 얼마나 달라지는지 계산합니다."
+  default_prompt: "$daehwan 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

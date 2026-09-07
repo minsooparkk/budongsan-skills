@@ -1,0 +1,4 @@
+interface:
+  display_name: "대지지분"
+  short_description: "단지 땅에서 내 집이 차지하는 몫과 그 땅의 공시지가 기준 가액을 추정합니다."
+  default_prompt: "$daeji-jibun 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

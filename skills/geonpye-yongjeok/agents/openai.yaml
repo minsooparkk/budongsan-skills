@@ -1,0 +1,4 @@
+interface:
+  display_name: "건폐율 · 용적률"
+  short_description: "땅 대비 건물 면적의 비율과 입력한 상한에 따른 최대 건축면적을 계산합니다."
+  default_prompt: "$geonpye-yongjeok 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "경락잔금대출 한도"
+  short_description: "경매 낙찰가와 감정가에 대출 비율을 적용해 잔금대출의 담보 기준 금액을 계산합니다."
+  default_prompt: "$gyeongnak 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

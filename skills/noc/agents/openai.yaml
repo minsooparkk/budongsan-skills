@@ -1,0 +1,4 @@
+interface:
+  display_name: "환산임대료(NOC)"
+  short_description: "보증금·월세·관리비를 월 비용으로 합쳐 사무실이나 상가의 실제 사용 면적당 부담을 비교합니다."
+  default_prompt: "$noc 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

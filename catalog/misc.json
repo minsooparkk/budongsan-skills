@@ -1,0 +1,2074 @@
+[
+  {
+    "id": "baedang",
+    "title": "경매 배당",
+    "description": "경매 낙찰대금을 정해진 순서로 나누었을 때 각 채권자가 받을 돈을 계산합니다.",
+    "module": "auction",
+    "export": "calcPayout",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "price",
+        "type": "number",
+        "question": "낙찰대금은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "costs",
+        "type": "number",
+        "question": "낙찰대금에서 먼저 돌려줄 경매 집행비용은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "region",
+        "type": "enum",
+        "question": "경매 주택은 어느 지역에 있나요? 소액임차인 보호 한도를 나누는 지역입니다.",
+        "required": true,
+        "options": [
+          {
+            "value": "seoul",
+            "label": "서울"
+          },
+          {
+            "value": "metro-over",
+            "label": "과밀억제권역·세종·용인·화성·김포"
+          },
+          {
+            "value": "metro-city",
+            "label": "광역시·안산·광주·파주·이천·평택"
+          },
+          {
+            "value": "other",
+            "label": "그 밖의 지역"
+          }
+        ]
+      },
+      {
+        "key": "tenant",
+        "type": "number",
+        "question": "확정일자를 받은 임차인의 보증금은 얼마인가요? 임차인이 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "tenantSenior",
+        "type": "boolean",
+        "question": "임차인의 전입과 확정일자가 첫 번째 근저당보다 모두 앞서나요? 등기부와 전입·확정일자 자료로 확인합니다.",
+        "required": false,
+        "default": false,
+        "assumption": "임차인이 없어 임차인의 우선순위는 계산에 사용하지 않습니다.",
+        "requiredUnless": {
+          "key": "tenant",
+          "value": 0
+        }
+      },
+      {
+        "key": "tax",
+        "type": "number",
+        "question": "이 부동산의 체납 재산세·종합부동산세는 얼마인가요? 체납이 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "mortgage1",
+        "type": "number",
+        "question": "첫 번째 근저당의 실제 채권액은 얼마인가요? 원금과 이자를 합하며, 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "mortgage2",
+        "type": "number",
+        "question": "두 번째 근저당의 실제 채권액은 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "mortgage3",
+        "type": "number",
+        "question": "세 번째 근저당의 실제 채권액은 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      }
+    ],
+    "example": {
+      "price": 400000000,
+      "costs": 2000000,
+      "region": "seoul",
+      "tenant": 0,
+      "tax": 0,
+      "mortgage1": 250000000,
+      "mortgage2": 0,
+      "mortgage3": 0
+    },
+    "notes": [
+      "이 결과는 임차인 1명과 근저당 3개를 가정한 단순 배당 시나리오입니다. 실제 배당순위와 낙찰자의 인수 의무를 확정하지 않습니다.",
+      "체납세금은 임차보증금보다 먼저 배당하는 구조입니다. 임차인 확정일자와 세금의 법정기일에 따른 예외는 별도로 확인해야 합니다.",
+      "소액임차인 한도는 엔진의 지역별 표를 사용합니다. 최초 담보권 설정일에 따른 과거 한도와 배당요구 요건은 반영하지 않습니다.",
+      "권리관계를 모르면 필수 답을 추측하지 않습니다. 매각물건명세서·등기부·채권신고 자료를 확인한 뒤 계산합니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "beopmusa",
+    "title": "법무사 보수",
+    "description": "부동산의 명의를 옮길 때 법무사에게 지급할 보수를 추정합니다.",
+    "module": "fees",
+    "export": "calcJudicialFee",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "base",
+        "type": "number",
+        "question": "소유권을 이전할 부동산의 취득세 과세표준은 얼마인가요? 일반 매매에서는 거래금액을 확인합니다.",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "mortgage",
+        "type": "number",
+        "question": "함께 설정할 근저당의 채권최고액은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "근저당 설정 업무의 보수는 제외했습니다."
+      },
+      {
+        "key": "expenses",
+        "type": "number",
+        "question": "교통비·증명서 발급비 등 별도 실비는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "교통비·증명서 발급비 등 별도 실비는 제외했습니다."
+      },
+      {
+        "key": "discount",
+        "type": "number",
+        "question": "법무사와 협의한 할인율은 얼마인가요? 예: 10%는 0.1입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 0.9,
+        "default": 0,
+        "assumption": "협의 할인을 적용하지 않았습니다."
+      },
+      {
+        "key": "vat",
+        "type": "boolean",
+        "question": "부가가치세를 포함해서 볼까요?",
+        "required": false,
+        "default": true,
+        "assumption": "보수와 입력한 실비에 부가가치세 10%를 더했습니다."
+      }
+    ],
+    "example": {
+      "base": 300000000
+    },
+    "notes": [
+      "취득세·인지세·채권 할인비용은 이 보수에 포함하지 않습니다. 법무사 견적서의 공과금 항목을 별도로 확인합니다.",
+      "근저당 설정 보수는 이전등기 기본보수의 70%로 가정합니다. 실제 계약 보수와 다를 수 있습니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "chaegwon",
+    "title": "국민주택채권",
+    "description": "등기 때 국민주택채권을 사고 바로 팔면 부담할 할인비용을 계산합니다.",
+    "module": "fees",
+    "export": "calcBond",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "kind",
+        "type": "enum",
+        "question": "등기할 부동산의 종류는 무엇인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "house",
+            "label": "주택: 아파트·단독·다세대 등"
+          },
+          {
+            "value": "officetel",
+            "label": "오피스텔"
+          },
+          {
+            "value": "building",
+            "label": "상가·일반 건물"
+          },
+          {
+            "value": "land",
+            "label": "토지"
+          }
+        ]
+      },
+      {
+        "key": "standardValue",
+        "type": "number",
+        "question": "부동산의 시가표준액은 얼마인가요? 거래가격 대신 채권 매입 기준으로 안내받은 금액을 넣습니다.",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "metro",
+        "type": "boolean",
+        "question": "부동산은 특별시 또는 광역시에 있나요?",
+        "required": true
+      },
+      {
+        "key": "discountRate",
+        "type": "number",
+        "question": "등기 당일 은행이 안내한 채권 할인율은 몇 %인가요? 예: 10%는 10입니다.",
+        "required": true,
+        "unit": "%",
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "couponRate",
+        "type": "number",
+        "question": "채권을 보유할 경우의 연 표면금리는 몇 %인가요? 예: 1.3%는 1.3입니다.",
+        "required": false,
+        "unit": "%",
+        "min": 0,
+        "max": 100,
+        "default": 0,
+        "assumption": "보유 이자는 반영하지 않도록 참고 표면금리를 0%로 두었습니다."
+      }
+    ],
+    "example": {
+      "kind": "house",
+      "standardValue": 300000000,
+      "metro": false,
+      "discountRate": 8
+    },
+    "notes": [
+      "할인율은 매일 바뀝니다. 당일 취급 은행의 실제 고시값을 확인해야 부담액을 계산할 수 있습니다.",
+      "보유와 즉시매도 중 어느 쪽이 유리한지는 이 할인비용만으로 판단하지 않습니다. 표면금리와 매도 가격·만기·세금을 함께 비교합니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "choejeoga",
+    "title": "경매 최저가 · 입찰보증금",
+    "description": "경매가 유찰될 때 최저매각가격과 필요한 입찰보증금이 얼마나 줄어드는지 계산합니다.",
+    "module": "auction",
+    "export": "calcMinBid",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "appraisal",
+        "type": "number",
+        "question": "경매의 최초 감정가는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "failures",
+        "type": "number",
+        "question": "지금까지 몇 번 유찰되었나요? 첫 매각기일이면 0회입니다.",
+        "required": true,
+        "unit": "회",
+        "min": 0,
+        "integer": true,
+        "max": 100
+      },
+      {
+        "key": "reduction",
+        "type": "number",
+        "question": "법원이 정한 유찰 때마다의 가격 인하율은 얼마인가요? 예: 20%는 0.2입니다.",
+        "required": true,
+        "unit": "비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "depositRate",
+        "type": "number",
+        "question": "매각공고에서 정한 입찰보증금 비율은 얼마인가요? 예: 10%는 0.1입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0.1,
+        "assumption": "입찰보증금은 일반 매각을 가정해 최저매각가격의 10%로 계산했습니다."
+      }
+    ],
+    "example": {
+      "appraisal": 500000000,
+      "failures": 1,
+      "reduction": 0.2
+    },
+    "notes": [
+      "실제 입찰에는 매각공고의 최저매각가격과 보증금액을 사용합니다. 재매각 등은 보증금 비율이 달라질 수 있습니다.",
+      "가격 인하율은 법원과 사건마다 다릅니다. 20%나 30%를 확인 없이 선택하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "daeji-jibun",
+    "title": "대지지분",
+    "description": "단지 땅에서 내 집이 차지하는 몫과 그 땅의 공시지가 기준 가액을 추정합니다.",
+    "module": "units",
+    "export": "calcLandShare",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "siteArea",
+        "type": "number",
+        "question": "단지 전체 대지면적은 몇 ㎡인가요?",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "myExclusive",
+        "type": "number",
+        "question": "내 집의 전용면적은 몇 ㎡인가요?",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "totalExclusive",
+        "type": "number",
+        "question": "단지 전체 집들의 전용면적 합계는 몇 ㎡인가요?",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "landPrice",
+        "type": "number",
+        "question": "토지의 ㎡당 공시지가는 얼마인가요?",
+        "required": true,
+        "unit": "원/㎡",
+        "min": 0
+      }
+    ],
+    "example": {
+      "siteArea": 10000,
+      "myExclusive": 59,
+      "totalExclusive": 30000,
+      "landPrice": 2000000
+    },
+    "notes": [
+      "이 결과는 전용면적 비율로 나눈 추정치입니다. 실제 내 땅의 몫은 등기부 표제부의 대지권 비율을 확인합니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "danwi-gagyeok",
+    "title": "평당 · ㎡당 가격",
+    "description": "전체 부동산 가격을 1평당 가격과 1㎡당 가격으로 바꿉니다.",
+    "module": "units",
+    "export": "calcUnitPrice",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "price",
+        "type": "number",
+        "question": "전체 부동산 가격은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "area",
+        "type": "number",
+        "question": "가격을 나눌 면적은 얼마인가요? 전용면적인지 공급면적인지도 함께 알려 주세요.",
+        "required": true,
+        "unit": "선택한 면적 단위",
+        "min": 1e-06
+      },
+      {
+        "key": "unit",
+        "type": "enum",
+        "question": "입력한 면적의 단위는 무엇인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "sqm",
+            "label": "제곱미터(㎡)"
+          },
+          {
+            "value": "pyeong",
+            "label": "평"
+          }
+        ]
+      }
+    ],
+    "example": {
+      "price": 600000000,
+      "area": 59,
+      "unit": "sqm"
+    },
+    "notes": [
+      "가격 비교에는 같은 종류의 면적을 사용합니다. 전용면적으로 나눈 평당가와 공급면적으로 나눈 평당가는 다릅니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "gamjeong",
+    "title": "감정평가 (원가·비교·수익 8방식)",
+    "description": "부동산 가격이나 연 임대료를 선택한 평가 방식으로 추정합니다. 선택한 방식에 필요한 정보만 묻습니다.",
+    "module": "invest",
+    "export": "calcAppraisal",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "method",
+        "type": "enum",
+        "question": "어떤 근거로 부동산 가격이나 연 임대료를 추정할까요?",
+        "required": true,
+        "options": [
+          {
+            "value": "cost",
+            "label": "새로 짓는 비용과 토지가격으로 평가: 원가법"
+          },
+          {
+            "value": "sales",
+            "label": "비슷한 부동산의 거래가격으로 평가: 거래사례비교법"
+          },
+          {
+            "value": "land",
+            "label": "표준지 공시지가로 토지를 평가: 공시지가기준법"
+          },
+          {
+            "value": "income",
+            "label": "연간 순수익으로 가격을 평가: 수익환원법"
+          },
+          {
+            "value": "dcf",
+            "label": "여러 해의 미래 수익을 오늘 가치로 평가: DCF"
+          },
+          {
+            "value": "rent-sales",
+            "label": "비슷한 임대사례로 연 임대료를 평가: 임대사례비교법"
+          },
+          {
+            "value": "rent-cost",
+            "label": "부동산 가치와 목표수익으로 연 임대료를 평가: 적산법"
+          },
+          {
+            "value": "rent-income",
+            "label": "사업 이익 중 부동산 몫으로 연 임대료를 평가: 수익분석법"
+          }
+        ]
+      },
+      {
+        "key": "landValue",
+        "type": "number",
+        "question": "토지만의 평가금액은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "cost"
+        }
+      },
+      {
+        "key": "newCost",
+        "type": "number",
+        "question": "같은 건물을 지금 새로 짓는 데 드는 비용은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "cost"
+        }
+      },
+      {
+        "key": "residualRate",
+        "type": "number",
+        "question": "건물의 가치가 새 건물 대비 얼마나 남았다고 보나요? 예: 70%는 0.7입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "cost"
+        }
+      },
+      {
+        "key": "caseValue",
+        "type": "number",
+        "question": "비교할 사례의 금액은 얼마인가요? 거래사례는 매매가격, 임대사례는 1년 임대료입니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "values": [
+            "sales",
+            "rent-sales"
+          ]
+        }
+      },
+      {
+        "key": "timeFactor",
+        "type": "number",
+        "question": "거래·임대 시점 차이를 몇 배로 보정할까요? 차이가 없으면 1배입니다.",
+        "required": false,
+        "unit": "배",
+        "min": 1e-06,
+        "default": 1,
+        "assumption": "시점 보정배율은 1배로 두어 기간 중 가격 변동을 반영하지 않았습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "values": [
+            "sales",
+            "rent-sales"
+          ]
+        }
+      },
+      {
+        "key": "areaFactor",
+        "type": "number",
+        "question": "면적·규모 차이를 몇 배로 보정할까요? 차이가 없으면 1배입니다.",
+        "required": false,
+        "unit": "배",
+        "min": 1e-06,
+        "default": 1,
+        "assumption": "면적·규모 보정배율은 1배로 두어 크기 차이를 반영하지 않았습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "values": [
+            "sales",
+            "rent-sales"
+          ]
+        }
+      },
+      {
+        "key": "conditionFactor",
+        "type": "number",
+        "question": "위치·상태 등 개별 차이를 몇 배로 보정할까요? 차이가 없으면 1배입니다.",
+        "required": false,
+        "unit": "배",
+        "min": 1e-06,
+        "default": 1,
+        "assumption": "개별요인 보정배율은 1배로 두어 위치·상태 차이를 반영하지 않았습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "values": [
+            "sales",
+            "rent-sales"
+          ]
+        }
+      },
+      {
+        "key": "otherFactor",
+        "type": "number",
+        "question": "그 밖의 차이를 몇 배로 보정할까요? 차이가 없으면 1배입니다.",
+        "required": false,
+        "unit": "배",
+        "min": 1e-06,
+        "default": 1,
+        "assumption": "기타 보정배율은 1배로 두어 추가 조정을 하지 않았습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "values": [
+            "sales",
+            "rent-sales"
+          ]
+        }
+      },
+      {
+        "key": "officialPrice",
+        "type": "number",
+        "question": "비교 표준지의 ㎡당 공시지가는 얼마인가요?",
+        "required": false,
+        "unit": "원/㎡",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "land"
+        }
+      },
+      {
+        "key": "area",
+        "type": "number",
+        "question": "평가할 토지 면적은 몇 ㎡인가요?",
+        "required": false,
+        "unit": "㎡",
+        "min": 1e-06,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "land"
+        }
+      },
+      {
+        "key": "timeRate",
+        "type": "number",
+        "question": "공시기준일과 평가일의 가격 차이를 몇 배로 보정할까요? 차이가 없으면 1배입니다.",
+        "required": false,
+        "unit": "배",
+        "min": 1e-06,
+        "default": 1,
+        "assumption": "시점수정 배율은 1배로 두어 기간 중 지가 변동을 반영하지 않았습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "value": "land"
+        }
+      },
+      {
+        "key": "regionFactor",
+        "type": "number",
+        "question": "지역 차이를 몇 배로 보정할까요? 차이가 없으면 1배입니다.",
+        "required": false,
+        "unit": "배",
+        "min": 1e-06,
+        "default": 1,
+        "assumption": "지역 보정배율은 1배로 두어 지역 차이를 반영하지 않았습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "value": "land"
+        }
+      },
+      {
+        "key": "itemFactor",
+        "type": "number",
+        "question": "도로·모양 등 토지의 개별 차이를 몇 배로 보정할까요? 차이가 없으면 1배입니다.",
+        "required": false,
+        "unit": "배",
+        "min": 1e-06,
+        "default": 1,
+        "assumption": "개별요인 보정배율은 1배로 두어 토지의 개별 차이를 반영하지 않았습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "value": "land"
+        }
+      },
+      {
+        "key": "noi",
+        "type": "number",
+        "question": "1년 임대수입에서 운영비를 뺀 순수익은 얼마인가요? 대출이자와 소득세를 빼기 전 금액입니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "values": [
+            "income",
+            "dcf"
+          ]
+        }
+      },
+      {
+        "key": "capRate",
+        "type": "number",
+        "question": "가격으로 환산할 연 수익률은 얼마인가요? 주변 거래 수익률 등이 근거이며 5%는 0.05입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 1e-06,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "income"
+        }
+      },
+      {
+        "key": "years",
+        "type": "number",
+        "question": "미래 수익을 몇 년간 예상할까요?",
+        "required": false,
+        "unit": "년",
+        "min": 1,
+        "integer": true,
+        "max": 100,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "dcf"
+        }
+      },
+      {
+        "key": "growth",
+        "type": "number",
+        "question": "연간 순수익은 매년 얼마나 늘거나 줄 것으로 보나요? 2% 증가는 0.02, 2% 감소는 -0.02입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": -0.99,
+        "max": 1,
+        "default": 0,
+        "assumption": "연간 순수익이 매년 같은 금액으로 유지된다고 가정했습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "value": "dcf"
+        }
+      },
+      {
+        "key": "discountRate",
+        "type": "number",
+        "question": "미래 돈을 오늘 가치로 바꿀 연 할인율은 얼마인가요? 기대수익과 위험을 고려하며 6%는 0.06입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "dcf"
+        }
+      },
+      {
+        "key": "exitCap",
+        "type": "number",
+        "question": "예상 보유기간 끝에 매도가격을 구할 연 환원율은 얼마인가요? 5%는 0.05입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 1e-06,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "dcf"
+        }
+      },
+      {
+        "key": "baseValue",
+        "type": "number",
+        "question": "임대료 계산의 바탕이 될 부동산 가치는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "rent-cost"
+        }
+      },
+      {
+        "key": "expectedRate",
+        "type": "number",
+        "question": "그 부동산 가치에 대해 기대하는 연 수익률은 얼마인가요? 4%는 0.04입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "rent-cost"
+        }
+      },
+      {
+        "key": "expenses",
+        "type": "number",
+        "question": "임대료에 더할 1년 세금·수선비·관리비 등은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "연간 세금·수선비·관리비 등 추가 경비를 제외했습니다.",
+        "appliesWhen": {
+          "key": "method",
+          "values": [
+            "rent-cost",
+            "rent-income"
+          ]
+        }
+      },
+      {
+        "key": "businessProfit",
+        "type": "number",
+        "question": "해당 장소에서 올리는 1년 영업이익은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "rent-income"
+        }
+      },
+      {
+        "key": "rentShare",
+        "type": "number",
+        "question": "영업이익 중 부동산이 기여한 비율은 얼마라고 보나요? 30%는 0.3입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "선택하지 않은 평가 방식의 입력은 계산에 사용하지 않습니다.",
+        "requiredWhen": {
+          "key": "method",
+          "value": "rent-income"
+        }
+      }
+    ],
+    "example": {
+      "method": "income",
+      "noi": 24000000,
+      "capRate": 0.04
+    },
+    "notes": [
+      "이 결과는 입력한 가정에 따른 산식 결과입니다. 감정평가사가 작성한 평가서나 세법상 인정되는 감정가액을 대신하지 않습니다.",
+      "임대사례의 금액은 1년 기준으로 맞춥니다. 월 임대료를 답하면 12를 곱해 연 임대료로 바꾼 뒤 확인합니다.",
+      "DCF는 매년 말에 수익을 받고 마지막에 매각하는 구조입니다. 마지막 다음 해 순수익을 최종환원율로 나누어 매도가격을 계산합니다.",
+      "보정배율 1은 차이를 조정하지 않는 가정입니다. 실제 두 부동산의 가치가 같다는 판단을 뜻하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "gamjeong-susuryo",
+    "title": "감정평가수수료",
+    "description": "감정평가를 의뢰할 때 드는 수수료와 부가가치세를 추정합니다.",
+    "module": "fees",
+    "export": "calcAppraisalFee",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "value",
+        "type": "number",
+        "question": "평가 대상 부동산의 예상 평가금액은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "factor",
+        "type": "number",
+        "question": "기준 수수료에 적용할 협의 배율은 몇 배인가요?",
+        "required": false,
+        "unit": "배",
+        "min": 0.8,
+        "max": 1.2,
+        "default": 1,
+        "assumption": "기준 수수료의 1배를 적용했습니다."
+      },
+      {
+        "key": "expenses",
+        "type": "number",
+        "question": "출장비·자료 발급비 등 별도 실비는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "출장비·자료 발급비 등 실비는 제외했습니다."
+      },
+      {
+        "key": "vat",
+        "type": "boolean",
+        "question": "부가가치세를 포함해서 볼까요?",
+        "required": false,
+        "default": true,
+        "assumption": "수수료와 입력한 실비에 부가가치세 10%를 더했습니다."
+      }
+    ],
+    "example": {
+      "value": 300000000
+    },
+    "notes": [
+      "실제 비용은 평가 목적과 협의 배율·실비에 따라 달라집니다. 의뢰 전 평가법인의 견적과 비교합니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "geonmul-buga",
+    "title": "건물 부가가치세",
+    "description": "토지와 건물을 함께 거래할 때 과세 대상 건물에 붙는 부가가치세를 계산합니다.",
+    "module": "invest",
+    "export": "calcBuildingVat",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "price",
+        "type": "number",
+        "question": "부가가치세를 제외한 토지와 건물의 총 거래금액은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "landStd",
+        "type": "number",
+        "question": "토지의 기준시가는 얼마인가요? 건물과 가격을 나누는 기준입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "buildingStd",
+        "type": "number",
+        "question": "건물의 기준시가는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "contractBuilding",
+        "type": "number",
+        "question": "계약서에 따로 적은 건물 공급가액은 얼마인가요? 부가가치세를 제외한 금액입니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "계약서의 건물 구분금액 대신 토지·건물 기준시가 비율로 나눴습니다."
+      },
+      {
+        "key": "buyerBusiness",
+        "type": "boolean",
+        "question": "매수인이 매입세액 공제 요건을 확인한 과세사업용 거래인가요?",
+        "required": false,
+        "default": false,
+        "assumption": "매수인의 매입세액 공제·환급은 적용하지 않는 전제로 설명합니다."
+      }
+    ],
+    "example": {
+      "price": 600000000,
+      "landStd": 250000000,
+      "buildingStd": 150000000
+    },
+    "notes": [
+      "이 도구는 건물 공급이 부가가치세 과세 대상인 경우에만 씁니다. 국민주택 등 면세 거래나 사업의 포괄양수도 여부는 먼저 확인합니다.",
+      "사업자등록만으로 부가가치세 환급이 확정되지 않습니다. 과세사업 사용, 세금계산서, 공제 제외 사유 등을 따로 확인합니다.",
+      "기준시가 비율을 적용하는 단순 안분입니다. 감정평가액 우선 적용이나 계약금액 인정의 예외는 별도로 검토합니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "geonpye-yongjeok",
+    "title": "건폐율 · 용적률",
+    "description": "땅 대비 건물 면적의 비율과 입력한 상한에 따른 최대 건축면적을 계산합니다.",
+    "module": "units",
+    "export": "calcCoverage",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "siteArea",
+        "type": "number",
+        "question": "대지면적은 몇 ㎡인가요? 건물이 있는 땅의 전체 면적입니다.",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "buildingArea",
+        "type": "number",
+        "question": "건축면적은 몇 ㎡인가요? 건물을 위에서 내려다본 면적을 뜻합니다.",
+        "required": true,
+        "unit": "㎡",
+        "min": 0
+      },
+      {
+        "key": "floorArea",
+        "type": "number",
+        "question": "용적률 계산에 들어가는 지상 연면적은 몇 ㎡인가요? 각 층의 해당 면적을 합합니다.",
+        "required": true,
+        "unit": "㎡",
+        "min": 0
+      },
+      {
+        "key": "maxCoverage",
+        "type": "number",
+        "question": "해당 토지에 적용되는 건폐율 상한은 얼마인가요? 60%는 0.6입니다.",
+        "required": true,
+        "unit": "비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "maxFar",
+        "type": "number",
+        "question": "해당 토지에 적용되는 용적률 상한은 얼마인가요? 200%는 2입니다.",
+        "required": true,
+        "unit": "비율",
+        "min": 0
+      }
+    ],
+    "example": {
+      "siteArea": 200,
+      "buildingArea": 100,
+      "floorArea": 300,
+      "maxCoverage": 0.6,
+      "maxFar": 2
+    },
+    "notes": [
+      "상한은 토지의 용도지역과 지자체 조례·특례를 확인해 입력합니다. 주소나 용도지역 없이 법정 상한을 임의로 정하지 않습니다.",
+      "건축 가능 여부는 이 비율만으로 확정되지 않습니다. 높이·도로·일조·주차 등 다른 허가 기준도 적용됩니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "gijun-siga",
+    "title": "건물 기준시가",
+    "description": "국세청 산식에 면적과 해당 연도 지수를 넣어 건물 기준시가를 계산합니다.",
+    "module": "invest",
+    "export": "calcBuildingValue",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "area",
+        "type": "number",
+        "question": "기준시가를 계산할 건물 면적은 몇 ㎡인가요?",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "unitPrice",
+        "type": "number",
+        "question": "적용 연도 국세청 고시의 신축 건물 ㎡당 기준금액은 얼마인가요?",
+        "required": true,
+        "unit": "원/㎡",
+        "min": 1
+      },
+      {
+        "key": "structureIndex",
+        "type": "number",
+        "question": "건물 구조에 맞는 구조지수는 얼마인가요? 고시표의 100은 1.0으로 입력합니다.",
+        "required": true,
+        "unit": "배",
+        "min": 1e-06
+      },
+      {
+        "key": "useIndex",
+        "type": "number",
+        "question": "건물 용도에 맞는 용도지수는 얼마인가요? 고시표의 100은 1.0으로 입력합니다.",
+        "required": true,
+        "unit": "배",
+        "min": 1e-06
+      },
+      {
+        "key": "locationIndex",
+        "type": "number",
+        "question": "건물 위치에 맞는 위치지수는 얼마인가요? 고시표의 100은 1.0으로 입력합니다.",
+        "required": true,
+        "unit": "배",
+        "min": 1e-06
+      },
+      {
+        "key": "residualRate",
+        "type": "number",
+        "question": "건물 구조와 경과연수에 맞는 잔가율은 얼마인가요? 80%는 0.8입니다.",
+        "required": true,
+        "unit": "비율",
+        "min": 0,
+        "max": 1
+      }
+    ],
+    "example": {
+      "area": 80,
+      "unitPrice": 800000,
+      "structureIndex": 1,
+      "useIndex": 1,
+      "locationIndex": 1,
+      "residualRate": 0.75
+    },
+    "notes": [
+      "지수와 신축 기준금액은 적용 연도의 국세청 고시로 확인합니다. 예제 숫자를 실제 건물의 지수로 대입하지 않습니다.",
+      "별도로 고시된 오피스텔·상업용 건물 등의 기준시가가 우선하는 경우는 이 일반 산식을 바로 적용하지 않습니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "gilyi",
+    "title": "길이 환산",
+    "description": "길이를 미터·피트·인치·자 등 여러 단위로 바꿉니다.",
+    "module": "units",
+    "export": "calcLength",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "value",
+        "type": "number",
+        "question": "바꿀 길이는 얼마인가요?",
+        "required": true,
+        "unit": "선택한 길이 단위",
+        "min": 0
+      },
+      {
+        "key": "unit",
+        "type": "enum",
+        "question": "입력한 길이의 단위는 무엇인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "m",
+            "label": "미터(m)"
+          },
+          {
+            "value": "km",
+            "label": "킬로미터(km)"
+          },
+          {
+            "value": "cm",
+            "label": "센티미터(cm)"
+          },
+          {
+            "value": "mm",
+            "label": "밀리미터(mm)"
+          },
+          {
+            "value": "inch",
+            "label": "인치(in)"
+          },
+          {
+            "value": "ft",
+            "label": "피트(ft)"
+          },
+          {
+            "value": "yd",
+            "label": "야드(yd)"
+          },
+          {
+            "value": "mile",
+            "label": "마일(mi)"
+          },
+          {
+            "value": "ja",
+            "label": "자(尺)"
+          },
+          {
+            "value": "ri",
+            "label": "리(里)"
+          }
+        ]
+      }
+    ],
+    "example": {
+      "value": 30,
+      "unit": "m"
+    },
+    "notes": [
+      "길이와 면적은 다른 값입니다. 평과 제곱미터를 바꾸려면 면적 환산을 사용합니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "gyeongmae-biyong",
+    "title": "경매 신청 비용",
+    "description": "채권자가 경매를 신청할 때 미리 낼 세금·송달료·감정료 등을 추정합니다.",
+    "module": "auction",
+    "export": "calcAuctionCost",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "claim",
+        "type": "number",
+        "question": "경매로 받으려는 채권 청구금액은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "appraisal",
+        "type": "number",
+        "question": "경매 대상 부동산의 예상 감정가는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "parties",
+        "type": "number",
+        "question": "송달할 이해관계인은 몇 명인가요? 채권자·채무자·소유자 등 송달 대상 수입니다.",
+        "required": true,
+        "unit": "명",
+        "min": 1,
+        "integer": true,
+        "max": 10000
+      },
+      {
+        "key": "appraisalFee",
+        "type": "number",
+        "question": "법원이 안내한 감정료가 있으면 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "감정료는 예상 감정가에 감정평가 기준 수수료의 하한 배율과 부가가치세를 적용해 추정했습니다."
+      },
+      {
+        "key": "noticeFee",
+        "type": "number",
+        "question": "별도로 안내받은 신문공고료는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "신문공고료를 제외한 비용만 계산했습니다."
+      },
+      {
+        "key": "bailiffFee",
+        "type": "number",
+        "question": "현황조사·집행관 수수료는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "현황조사·집행관 수수료를 제외한 비용만 계산했습니다."
+      }
+    ],
+    "example": {
+      "claim": 100000000,
+      "appraisal": 300000000,
+      "parties": 3
+    },
+    "notes": [
+      "송달료는 최소 2명에 대해 1명당 10회·회당 5,200원으로 가정합니다. 실제 법원의 예납 통지와 다를 수 있습니다.",
+      "선택 비용을 생략한 합계에는 해당 비용이 빠집니다. 신청 전에 법원 예납 통지에 적힌 항목과 금액으로 보완합니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "inji",
+    "title": "인지세",
+    "description": "부동산 매매계약서에 붙는 인지세와 매수인이 나눠 낼 몫을 계산합니다.",
+    "module": "fees",
+    "export": "calcStamp",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "amount",
+        "type": "number",
+        "question": "계약서에 적힌 거래금액은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "isHouse",
+        "type": "boolean",
+        "question": "계약서는 완성된 주택의 매매계약서인가요? 분양권·입주권 전매는 아니오로 답합니다.",
+        "required": true
+      },
+      {
+        "key": "buyerShare",
+        "type": "number",
+        "question": "매수인이 부담하기로 한 비율은 얼마인가요? 절반이면 0.5입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0.5,
+        "assumption": "매수인과 매도인이 인지세를 절반씩 부담한다고 가정했습니다."
+      }
+    ],
+    "example": {
+      "amount": 300000000,
+      "isHouse": true
+    },
+    "notes": [
+      "절반 부담은 계산상 가정입니다. 실제 분담 약정과 법상 공동 작성자의 납부 책임은 별도로 확인합니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "jaegeonchuk",
+    "title": "재건축 연한",
+    "description": "준공연도에 적용 연한을 더해 재건축 연한이 되는 해를 계산합니다.",
+    "module": "units",
+    "export": "calcRebuild",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "completedYear",
+        "type": "number",
+        "question": "건축물대장의 사용승인 연도는 몇 년인가요?",
+        "required": true,
+        "unit": "연도",
+        "min": 1,
+        "integer": true,
+        "max": 9999
+      },
+      {
+        "key": "limitYears",
+        "type": "number",
+        "question": "해당 건물에 적용되는 재건축 연한은 몇 년인가요? 지자체 조례에서 확인한 기간입니다.",
+        "required": true,
+        "unit": "년",
+        "min": 1,
+        "integer": true,
+        "max": 100
+      },
+      {
+        "key": "safetyPassed",
+        "type": "boolean",
+        "question": "재건축진단을 통과했나요?",
+        "required": false,
+        "default": false,
+        "assumption": "재건축진단 통과가 확인되지 않은 상태로 후속 절차를 설명합니다."
+      }
+    ],
+    "example": {
+      "completedYear": 2000,
+      "limitYears": 30
+    },
+    "notes": [
+      "연한 도래는 재건축 사업 승인과 다릅니다. 건물 종류·조례·진단·정비계획 등 별도 조건을 확인합니다.",
+      "남은 기간은 답변의 기준일에 속한 연도로 계산합니다. 기준일을 생략하면 동봉된 계산식 기준일인 2026년 9월 7일을 사용합니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "janjon",
+    "title": "건물 잔존가치",
+    "description": "오래된 건물의 가치가 새 건물 대비 얼마나 남는지 입력한 감가 조건으로 추정합니다.",
+    "module": "invest",
+    "export": "calcResidual",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "newCost",
+        "type": "number",
+        "question": "같은 건물을 지금 새로 짓는 데 드는 비용은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "age",
+        "type": "number",
+        "question": "준공 후 얼마나 지났나요?",
+        "required": true,
+        "unit": "년",
+        "min": 0
+      },
+      {
+        "key": "life",
+        "type": "number",
+        "question": "가치가 줄어드는 기간을 총 몇 년으로 볼까요? 건물 구조와 평가 목적에 맞는 기간입니다.",
+        "required": true,
+        "unit": "년",
+        "min": 1,
+        "integer": true,
+        "max": 500
+      },
+      {
+        "key": "salvage",
+        "type": "number",
+        "question": "그 기간이 끝나도 남는 가치의 비율은 얼마로 볼까요? 10%는 0.1입니다.",
+        "required": true,
+        "unit": "비율",
+        "min": 0,
+        "max": 1
+      },
+      {
+        "key": "method",
+        "type": "enum",
+        "question": "가치가 줄어드는 방식을 고를까요?",
+        "required": false,
+        "options": [
+          {
+            "value": "straight",
+            "label": "매년 같은 금액이 줄어드는 정액법"
+          },
+          {
+            "value": "declining",
+            "label": "처음에 더 많이 줄어드는 정률법"
+          }
+        ],
+        "default": "straight",
+        "assumption": "매년 같은 금액이 줄어드는 정액법을 적용했습니다."
+      }
+    ],
+    "example": {
+      "newCost": 200000000,
+      "age": 10,
+      "life": 40,
+      "salvage": 0.1
+    },
+    "notes": [
+      "이 결과는 기간과 감가 방식에 따른 단순 추정입니다. 실제 수선 상태나 세법상 감가상각액을 확정하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "jeokjeong-ipchal",
+    "title": "경매 적정 입찰가",
+    "description": "경매로 산 부동산의 임대수익을 기준으로 입찰가격 시나리오를 계산합니다.",
+    "module": "invest",
+    "export": "calcFairPrice",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "예상 월 임대료는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "deposit",
+        "type": "number",
+        "question": "돌려줘야 하는 임대보증금은 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "targetYield",
+        "type": "number",
+        "question": "실제로 넣은 돈에서 기대하는 연 순수익률은 얼마인가요? 5%는 0.05입니다.",
+        "required": true,
+        "unit": "비율",
+        "min": 1e-06,
+        "max": 1
+      },
+      {
+        "key": "annualExpenses",
+        "type": "number",
+        "question": "1년 운영비는 얼마인가요? 보유세·수선비·관리비 등입니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "연간 운영비를 제외한 수익으로 계산했습니다."
+      },
+      {
+        "key": "vacancy",
+        "type": "number",
+        "question": "월세를 못 받는 공실 비율은 얼마로 볼까요? 5%는 0.05입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "공실 없이 1년 내내 월세를 받는다고 가정했습니다."
+      },
+      {
+        "key": "acquisitionRate",
+        "type": "number",
+        "question": "매수 가격 대비 취득세·중개보수 등 취득비용 비율은 얼마인가요? 5%는 0.05입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "취득세·중개보수 등 가격에 비례하는 취득비용을 제외했습니다."
+      },
+      {
+        "key": "extraCost",
+        "type": "number",
+        "question": "명도·수리 등 한 번 드는 추가 비용은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "명도·수리 등 일회성 추가 비용을 제외했습니다."
+      }
+    ],
+    "example": {
+      "monthly": 1000000,
+      "deposit": 20000000,
+      "targetYield": 0.04
+    },
+    "notes": [
+      "이 결과는 목표 수익률을 맞추는 가격 시나리오입니다. 시장가치나 권장 매수·입찰 가격을 확정하지 않습니다.",
+      "공실과 비용을 생략하면 감당할 수 있는 가격이 높게 나옵니다. 실제 결정을 하기 전 운영비·취득세·수리비를 보완합니다.",
+      "대출이자와 매각 시 세금은 이 산식에 직접 반영하지 않습니다. 임대보증금은 수입이 아니라 나중에 돌려줄 돈입니다.",
+      "미납관리비·인수할 보증금·명도비 등 경매 특유의 부담은 권리분석 후 비용에 반영해야 합니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "jeokjeong-maesu",
+    "title": "적정 매수가 · 적정 입찰가",
+    "description": "예상 임대수입과 목표 수익률로 감당할 수 있는 매수가격을 역산합니다.",
+    "module": "invest",
+    "export": "calcFairPrice",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "monthly",
+        "type": "number",
+        "question": "예상 월 임대료는 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "deposit",
+        "type": "number",
+        "question": "돌려줘야 하는 임대보증금은 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "targetYield",
+        "type": "number",
+        "question": "실제로 넣은 돈에서 기대하는 연 순수익률은 얼마인가요? 5%는 0.05입니다.",
+        "required": true,
+        "unit": "비율",
+        "min": 1e-06,
+        "max": 1
+      },
+      {
+        "key": "annualExpenses",
+        "type": "number",
+        "question": "1년 운영비는 얼마인가요? 보유세·수선비·관리비 등입니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "연간 운영비를 제외한 수익으로 계산했습니다."
+      },
+      {
+        "key": "vacancy",
+        "type": "number",
+        "question": "월세를 못 받는 공실 비율은 얼마로 볼까요? 5%는 0.05입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "공실 없이 1년 내내 월세를 받는다고 가정했습니다."
+      },
+      {
+        "key": "acquisitionRate",
+        "type": "number",
+        "question": "매수 가격 대비 취득세·중개보수 등 취득비용 비율은 얼마인가요? 5%는 0.05입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "취득세·중개보수 등 가격에 비례하는 취득비용을 제외했습니다."
+      },
+      {
+        "key": "extraCost",
+        "type": "number",
+        "question": "명도·수리 등 한 번 드는 추가 비용은 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "명도·수리 등 일회성 추가 비용을 제외했습니다."
+      }
+    ],
+    "example": {
+      "monthly": 1000000,
+      "deposit": 20000000,
+      "targetYield": 0.04
+    },
+    "notes": [
+      "이 결과는 목표 수익률을 맞추는 가격 시나리오입니다. 시장가치나 권장 매수·입찰 가격을 확정하지 않습니다.",
+      "공실과 비용을 생략하면 감당할 수 있는 가격이 높게 나옵니다. 실제 결정을 하기 전 운영비·취득세·수리비를 보완합니다.",
+      "대출이자와 매각 시 세금은 이 산식에 직접 반영하지 않습니다. 임대보증금은 수입이 아니라 나중에 돌려줄 돈입니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "jijeok",
+    "title": "지적측량수수료",
+    "description": "토지 측량의 기본단가·면적·필지 수로 측량비를 거칠게 추정합니다.",
+    "module": "fees",
+    "export": "calcSurvey",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "kind",
+        "type": "enum",
+        "question": "어떤 측량이 필요한가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "boundary",
+            "label": "경계 확인·담장 설치: 경계복원"
+          },
+          {
+            "value": "division",
+            "label": "땅을 여러 필지로 나누기: 분할"
+          },
+          {
+            "value": "status",
+            "label": "건물의 현재 위치 확인: 지적현황"
+          },
+          {
+            "value": "conversion",
+            "label": "임야대장에서 토지대장으로 전환: 등록전환"
+          },
+          {
+            "value": "registration",
+            "label": "미등록 토지를 처음 등록: 신규등록"
+          }
+        ]
+      },
+      {
+        "key": "area",
+        "type": "number",
+        "question": "측량할 면적은 몇 ㎡인가요?",
+        "required": true,
+        "unit": "㎡",
+        "min": 1e-06
+      },
+      {
+        "key": "parcels",
+        "type": "number",
+        "question": "측량할 필지는 몇 개인가요? 필지는 지번으로 구분되는 토지 단위입니다.",
+        "required": true,
+        "unit": "필지",
+        "min": 1,
+        "integer": true,
+        "max": 10000
+      },
+      {
+        "key": "baseFee",
+        "type": "number",
+        "question": "해당 지역과 측량 종류에 맞는 기본단가는 얼마인가요? LX 고시나 견적에서 확인합니다.",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "extraParcelRatio",
+        "type": "number",
+        "question": "추가 필지 1개마다 기본단가의 몇 배를 더할까요?",
+        "required": false,
+        "unit": "배",
+        "min": 0,
+        "default": 0.5,
+        "assumption": "추가 필지는 1개마다 기본단가의 50%를 더하는 가정으로 계산했습니다."
+      }
+    ],
+    "example": {
+      "kind": "boundary",
+      "area": 400,
+      "parcels": 1,
+      "baseFee": 600000
+    },
+    "notes": [
+      "이 계산은 공식 수수료표 전체를 구현하지 않은 근사식입니다. 1,000㎡ 초과 시 1,000㎡마다 기본단가의 15%를 더합니다.",
+      "실제 신청 비용은 LX 지적측량바로처리센터 견적으로 확인합니다. 지역별·종류별 공식 단가를 예제 금액으로 대체하지 않습니다."
+    ],
+    "rulesKind": "scenario"
+  },
+  {
+    "id": "jiyeok",
+    "title": "지역자원시설세(소방분)",
+    "description": "건물 재산세와 함께 부과되는 소방분 지역자원시설세를 계산합니다.",
+    "module": "fees",
+    "export": "calcFireTax",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "buildingValue",
+        "type": "number",
+        "question": "건물분 시가표준액은 얼마인가요? 토지가격을 제외한 금액입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "kind",
+        "type": "enum",
+        "question": "세금 계산상 건물 종류는 무엇인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "house",
+            "label": "주택"
+          },
+          {
+            "value": "building",
+            "label": "상가 등 일반 건축물"
+          }
+        ]
+      },
+      {
+        "key": "oneHouse",
+        "type": "boolean",
+        "question": "주택의 1세대 1주택 적용 요건을 충족하나요?",
+        "required": false,
+        "default": false,
+        "assumption": "일반 건축물에는 주택의 1세대 1주택 구분을 적용하지 않습니다.",
+        "requiredWhen": {
+          "key": "kind",
+          "value": "house"
+        }
+      },
+      {
+        "key": "riskMultiple",
+        "type": "number",
+        "question": "화재위험 건축물에 적용되는 배율은 몇 배인가요? 일반 1배, 중과 대상은 2배 또는 3배입니다.",
+        "required": true,
+        "unit": "배",
+        "min": 1,
+        "integer": true,
+        "max": 3
+      }
+    ],
+    "example": {
+      "buildingValue": 100000000,
+      "kind": "house",
+      "oneHouse": true,
+      "riskMultiple": 1
+    },
+    "notes": [
+      "배율은 건물 용도와 층수 등 법정 구분을 확인해 입력합니다. 모르면 일반 건물로 임의 분류하지 않습니다.",
+      "이 결과는 소방분 세액입니다. 재산세·도시지역분·지방교육세를 합친 고지서 전체 금액과 다릅니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "jonghap",
+    "title": "종합소득세",
+    "description": "여러 소득을 합산한 뒤 공제와 이미 낸 세금을 반영해 종합소득세를 추정합니다.",
+    "module": "invest",
+    "export": "calcTotalIncome",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "hasEarned",
+        "type": "boolean",
+        "question": "근로소득이 있나요? 급여를 받고 일한 소득을 말합니다.",
+        "required": true
+      },
+      {
+        "key": "earned",
+        "type": "number",
+        "question": "근로소득금액은 얼마인가요? 총급여가 아니라 원천징수영수증에서 근로소득공제를 뺀 금액입니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "근로소득이 없어 근로소득금액은 0원입니다.",
+        "requiredWhen": {
+          "key": "hasEarned",
+          "value": true
+        }
+      },
+      {
+        "key": "business",
+        "type": "number",
+        "question": "사업소득금액은 얼마인가요? 매출에서 필요경비를 뺀 금액이며, 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "rental",
+        "type": "number",
+        "question": "합산할 임대소득금액은 얼마인가요? 임대수입에서 필요경비를 뺀 금액이며, 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "other",
+        "type": "number",
+        "question": "그 밖에 종합과세로 합산할 소득금액은 얼마인가요? 없으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "dependents",
+        "type": "number",
+        "question": "본인을 포함해 기본공제를 받을 수 있는 사람은 몇 명인가요? 소득·나이 등 요건을 확인한 인원입니다.",
+        "required": false,
+        "unit": "명",
+        "min": 1,
+        "integer": true,
+        "max": 100,
+        "default": 1,
+        "assumption": "기본공제는 본인 1명분만 적용했습니다."
+      },
+      {
+        "key": "deductions",
+        "type": "number",
+        "question": "기본공제 외에 확인한 소득공제 합계는 얼마인가요? 연금보험료 공제 등입니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "본인 기본공제 외의 추가 소득공제를 제외했습니다."
+      },
+      {
+        "key": "credits",
+        "type": "number",
+        "question": "적용할 세액공제·감면의 합계는 얼마인가요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "별도 세액공제·감면 대신 엔진의 표준세액공제 가정을 적용했습니다. 근로소득이 있으면 13만원, 없으면 7만원입니다."
+      },
+      {
+        "key": "prepaid",
+        "type": "number",
+        "question": "미리 낸 소득세와 지방소득세 합계는 얼마인가요? 원천징수·중간예납 등이며, 합계 세액에서 뺍니다.",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "원천징수·중간예납 등 이미 낸 세금을 차감하지 않았습니다."
+      }
+    ],
+    "example": {
+      "hasEarned": false,
+      "business": 30000000,
+      "rental": 0,
+      "other": 0
+    },
+    "notes": [
+      "총수입이나 매출을 그대로 입력하면 세금이 과대계산될 수 있습니다. 각 소득은 필요한 비용·근로소득공제를 뺀 소득금액으로 넣습니다.",
+      "이 도구는 기본 합산 구조의 추정입니다. 결손금·금융소득 비교과세·분리과세·공제 한도 등 모든 신고 규정을 구현하지 않습니다.",
+      "표준세액공제의 실제 적용 요건은 별도로 확인합니다. 선택 공제나 이미 낸 세금을 생략한 결과를 최종 납부세액으로 단정하지 않습니다."
+    ],
+    "rulesKind": "dated"
+  },
+  {
+    "id": "nalja",
+    "title": "날짜 · 기간",
+    "description": "시작일과 종료일 사이의 일수와 달력상 기간을 계산합니다.",
+    "module": "units",
+    "export": "calcDate",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "from",
+        "type": "string",
+        "question": "시작일은 언제인가요? YYYY-MM-DD 형식으로 알려 주세요.",
+        "required": true
+      },
+      {
+        "key": "to",
+        "type": "string",
+        "question": "종료일은 언제인가요? 시작일과 같거나 뒤의 날짜를 YYYY-MM-DD 형식으로 알려 주세요.",
+        "required": true
+      }
+    ],
+    "example": {
+      "from": "2025-01-01",
+      "to": "2026-01-01"
+    },
+    "notes": [
+      "일수는 종료일에서 시작일을 뺀 값으로 시작일을 포함하지 않습니다. 세법상 보유기간이나 신고기한은 해당 규정의 날짜 계산법을 별도로 적용합니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "nujin",
+    "title": "누진세율 속산표",
+    "description": "공제를 마친 과세표준에 선택한 누진세율표를 적용해 기본 세액을 계산합니다.",
+    "module": "bands",
+    "export": "applyTable",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "taxBase",
+        "type": "number",
+        "question": "공제를 마친 과세표준은 얼마인가요? 세율을 곱하는 기준 금액이며 집값·매출·총급여와 다릅니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "table",
+        "type": "enum",
+        "question": "어떤 세율표를 적용할까요? 적용 세목과 분류를 확인한 표를 선택합니다.",
+        "required": true,
+        "options": [
+          {
+            "value": "income",
+            "label": "소득세: 종합소득·양도소득의 기본세율"
+          },
+          {
+            "value": "estate",
+            "label": "상속세·증여세"
+          },
+          {
+            "value": "corp",
+            "label": "법인세"
+          },
+          {
+            "value": "corp-local",
+            "label": "법인지방소득세"
+          },
+          {
+            "value": "cpt2",
+            "label": "주택 종합부동산세: 2주택 이하"
+          },
+          {
+            "value": "cpt3",
+            "label": "주택 종합부동산세: 3주택 이상"
+          },
+          {
+            "value": "prop-house",
+            "label": "주택 재산세: 일반"
+          },
+          {
+            "value": "prop-house-1",
+            "label": "주택 재산세: 1세대 1주택·공시가격 9억원 이하 특례"
+          },
+          {
+            "value": "prop-land-g",
+            "label": "토지 재산세: 종합합산"
+          },
+          {
+            "value": "prop-land-s",
+            "label": "토지 재산세: 별도합산"
+          }
+        ]
+      }
+    ],
+    "example": {
+      "taxBase": 30000000,
+      "table": "income"
+    },
+    "notes": [
+      "이 결과는 세율표만 적용한 기본 세액입니다. 지방세·할증·세액공제·이미 낸 세금 등은 자동으로 더하거나 빼지 않습니다.",
+      "과세표준을 모르면 해당 세금의 전용 계산기에서 먼저 구합니다. 재산 총액을 과세표준으로 임의 대입하지 않습니다.",
+      "세율표의 적용 연도와 구분은 공식 자료로 확인합니다. 표 이름만으로 해당 연도 세법이나 특례 충족을 보장하지 않습니다."
+    ],
+    "call": "bandTable",
+    "rulesKind": "dated"
+  },
+  {
+    "id": "pyeongsu",
+    "title": "평수 · 면적 환산",
+    "description": "면적을 제곱미터·평·제곱피트로 바꿉니다.",
+    "module": "units",
+    "export": "calcArea",
+    "mode": "estimate",
+    "fields": [
+      {
+        "key": "value",
+        "type": "number",
+        "question": "바꿀 면적은 얼마인가요?",
+        "required": true,
+        "unit": "선택한 면적 단위",
+        "min": 0
+      },
+      {
+        "key": "unit",
+        "type": "enum",
+        "question": "입력한 면적의 단위는 무엇인가요?",
+        "required": true,
+        "options": [
+          {
+            "value": "sqm",
+            "label": "제곱미터(㎡)"
+          },
+          {
+            "value": "pyeong",
+            "label": "평"
+          },
+          {
+            "value": "sqft",
+            "label": "제곱피트(ft²)"
+          }
+        ]
+      }
+    ],
+    "example": {
+      "value": 59,
+      "unit": "sqm"
+    },
+    "notes": [
+      "단위를 바꿔도 전용면적이 공급면적으로 바뀌지는 않습니다. 면적의 종류는 원래 자료와 같습니다."
+    ],
+    "rulesKind": "arithmetic"
+  },
+  {
+    "id": "remodeling",
+    "title": "리모델링 수익",
+    "description": "리모델링 비용에 비해 월세 증가와 예상 매각가격 상승으로 얼마나 남는지 계산합니다.",
+    "module": "invest",
+    "export": "calcRemodel",
+    "mode": "scenario",
+    "fields": [
+      {
+        "key": "cost",
+        "type": "number",
+        "question": "리모델링에 드는 전체 비용은 얼마인가요?",
+        "required": true,
+        "unit": "원",
+        "min": 1
+      },
+      {
+        "key": "rentIncrease",
+        "type": "number",
+        "question": "리모델링 후 월세가 매달 얼마나 더 늘 것으로 보나요? 늘지 않으면 0원입니다.",
+        "required": true,
+        "unit": "원",
+        "min": 0
+      },
+      {
+        "key": "valueIncrease",
+        "type": "number",
+        "question": "리모델링 덕분에 매각가격이 얼마나 더 오를 것으로 보나요?",
+        "required": false,
+        "unit": "원",
+        "min": 0,
+        "default": 0,
+        "assumption": "리모델링으로 인한 매각가격 상승은 반영하지 않았습니다."
+      },
+      {
+        "key": "years",
+        "type": "number",
+        "question": "리모델링 효과를 몇 년간 계산할까요?",
+        "required": true,
+        "unit": "년",
+        "min": 1e-06
+      },
+      {
+        "key": "rate",
+        "type": "number",
+        "question": "리모델링 자금의 연 이자율 또는 자금비용률은 얼마인가요? 5%는 0.05입니다.",
+        "required": false,
+        "unit": "비율",
+        "min": 0,
+        "max": 1,
+        "default": 0,
+        "assumption": "대출이자와 자기자금의 기회비용은 제외했습니다."
+      }
+    ],
+    "example": {
+      "cost": 10000000,
+      "rentIncrease": 100000,
+      "years": 5
+    },
+    "notes": [
+      "월세 증가와 매각가격 상승은 사용자의 예상입니다. 실제 임대료 인상 가능 여부나 수익을 보장하지 않습니다.",
+      "공사 중 공실·추가 유지비·매각세금은 이 산식에 직접 반영하지 않습니다. 입력한 비용 외의 부담을 함께 검토합니다."
+    ],
+    "rulesKind": "scenario"
+  }
+]

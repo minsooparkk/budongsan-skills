@@ -1,0 +1,4 @@
+interface:
+  display_name: "리모델링 수익"
+  short_description: "리모델링 비용에 비해 월세 증가와 예상 매각가격 상승으로 얼마나 남는지 계산합니다."
+  default_prompt: "$remodeling 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "평수 · 면적 환산"
+  short_description: "면적을 제곱미터·평·제곱피트로 바꿉니다."
+  default_prompt: "$pyeongsu 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "보유세 비교"
+  short_description: "집 한 채를 가진 세대의 명의·거주 조건에 따라 보유세가 어떻게 달라지는지 비교합니다."
+  default_prompt: "$boyuse 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."

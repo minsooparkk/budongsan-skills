@@ -1,0 +1,4 @@
+interface:
+  display_name: "감정평가수수료"
+  short_description: "감정평가를 의뢰할 때 드는 수수료와 부가가치세를 추정합니다."
+  default_prompt: "$gamjeong-susuryo 필요한 정보를 물어보고 계산해 주세요. 선택 질문은 기본 전제로 진행해 주세요."
