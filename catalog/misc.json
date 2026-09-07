@@ -1963,7 +1963,7 @@
   {
     "id": "pyeongsu",
     "title": "평수 · 면적 환산",
-    "description": "면적을 제곱미터·평·제곱피트로 바꿉니다.",
+    "description": "평·제곱미터·제곱피트를 서로 바꾸어 부동산의 면적을 계산합니다.",
     "module": "units",
     "export": "calcArea",
     "mode": "estimate",

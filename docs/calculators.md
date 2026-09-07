@@ -51,7 +51,7 @@
 | [종합소득세](../skills/jonghap/SKILL.md) | 여러 소득을 합산한 뒤 공제와 이미 낸 세금을 반영해 종합소득세를 추정합니다. | `$jonghap` | 예상 계산 |
 | [날짜 · 기간](../skills/nalja/SKILL.md) | 시작일과 종료일 사이의 일수와 달력상 기간을 계산합니다. | `$nalja` | 예상 계산 |
 | [누진세율 속산표](../skills/nujin/SKILL.md) | 공제를 마친 과세표준에 선택한 누진세율표를 적용해 기본 세액을 계산합니다. | `$nujin` | 예상 계산 |
-| [평수 · 면적 환산](../skills/pyeongsu/SKILL.md) | 면적을 제곱미터·평·제곱피트로 바꿉니다. | `$pyeongsu` | 예상 계산 |
+| [평수 · 면적 환산](../skills/pyeongsu/SKILL.md) | 평·제곱미터·제곱피트를 서로 바꾸어 부동산의 면적을 계산합니다. | `$pyeongsu` | 예상 계산 |
 | [리모델링 수익](../skills/remodeling/SKILL.md) | 리모델링 비용에 비해 월세 증가와 예상 매각가격 상승으로 얼마나 남는지 계산합니다. | `$remodeling` | 가정 시뮬레이션 |
 | [취득세](../skills/chwideuk/SKILL.md) | 부동산을 살 때·받을 때 내는 취득세와 함께 붙는 세금을 계산합니다. | `$chwideuk` | 예상 계산 |
 | [증여세](../skills/jeungyeo/SKILL.md) | 가족이나 다른 사람에게 재산을 받을 때 내는 증여세를 계산합니다. | `$jeungyeo` | 예상 계산 |
